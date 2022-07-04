@@ -54,6 +54,7 @@ namespace ManagementAngajati.Controllers
             //fac doar o conversie? 
             //anagajatRequest nu are lista de posturi, ci lista de id-uri 
             //angajatRequestW2 nu are id, spre deosebire de Angajat care are id 
+            // test
 
             Angajat angajat = Converter.AngajatW2ToAngajat(AngajatRequestToW2(angajatRequest));
             Angajat added = _angajatData.Add(angajat).Result; //are si id!!
