@@ -17,18 +17,14 @@ builder.Services.AddSwaggerGen();
 //
 builder.Services.AddCors();
 builder.Services.AddDbContextPool<ManagementAngajatiContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("ManagementAngajatiContextConnectionString")));
-//builder.Services.AddDbContextPool<AngajatiContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("ManagementAngajatiContextConnectionString")));
-//builder.Services.AddDbContextPool<AngajatiContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("ManagementAngajatiContextConnectionString")));
-//builder.Services.AddDbContextPool<AngajatiContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("ManagementAngajatiContextConnectionString")));
 
-//IServiceCollection serviceCollection = 
 builder.Services.AddScoped<IRepositoryAngajat, RepositoryAngajat>();
 builder.Services.AddScoped<IRepositoryPost, RepositoryPost>();
 builder.Services.AddScoped<IRepositoryConcediu, RepositoryConcediu>();
 builder.Services.AddScoped<IRepositoryIstoricAngajat, RepositoryIstoricAngajat>();
 
-
-
+builder.Services.AddHttpClient();
+builder.Services.AddAutoMapper(typeof(Program));
 var app = builder.Build();
 
 

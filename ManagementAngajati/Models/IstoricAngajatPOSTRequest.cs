@@ -2,13 +2,16 @@
 
 namespace ManagementAngajati.Models
 {
-    public class IstoricAngajatRequestW2 : Entity<long>
+    public class IstoricAngajatPOSTRequest
     {
-        [JsonProperty("Angajat")]
-        public Angajat Angajat { get; set; }
+        [JsonProperty("ID")]
+        public long ID { get; set; }
 
-        [JsonProperty("Post")]
-        public Post Post { get; set; }
+        [JsonProperty("IdAngajat")]
+        public long IdAngajat { get; set; }
+
+        [JsonProperty("IdPost")]
+        public long Post { get; set; }
 
         [JsonProperty("DataAngajare")]
         public DateTime DataAngajare { get; set; }
@@ -19,18 +22,17 @@ namespace ManagementAngajati.Models
         public DateTime? DataReziliere { get; set; }
 
 
-        public IstoricAngajatRequestW2(Angajat angajat, Post post, DateTime dataAngajare, int salariu, DateTime? dataReziliere)
+        public IstoricAngajatPOSTRequest(long id, long angajat, long post, DateTime dataAngajare, int salariu, DateTime? dataReziliere)
         {
-            
-            Angajat = angajat;
+            ID = ID;
+            IdAngajat = angajat;
             Post = post;
             DataAngajare = dataAngajare;
             Salariu = salariu;
             DataReziliere = dataReziliere;
         }
-        public IstoricAngajatRequestW2()
+        public IstoricAngajatPOSTRequest()
         {
-
+        }
         }
     }
-}

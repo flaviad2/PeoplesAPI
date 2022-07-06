@@ -1,21 +1,10 @@
-﻿
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 
 namespace ManagementAngajati.Models
 {
-    public class AngajatRequestW2 : Entity<long>
+    //nu are ID, iar lista de Posturi e lista de IDs
+    public class AngajatRequest
     {
-        public AngajatRequestW2(string nume, string prenume, string username, string password, DateTime dataNasterii, string sex, int experienta, List<Post> posturi)
-        {
-            Nume = nume;
-            Prenume = prenume;
-            Username = username;
-            Password = password;
-            DataNasterii = dataNasterii;
-            Sex = sex;
-            Experienta = experienta;
-            Posturi = posturi;
-        }
 
         [JsonProperty("Nume")]
         public String Nume { get; set; }
@@ -38,7 +27,8 @@ namespace ManagementAngajati.Models
         [JsonProperty("Experienta")]
         public int Experienta { get; set; }
 
+        [JsonProperty("IdPosturi")]
 
-        public List<Post> Posturi { get; set; } = new List<Post>();
+        public List<long> Posturi { get; set; } = new List<long>();
     }
 }

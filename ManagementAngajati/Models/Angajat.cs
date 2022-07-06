@@ -1,18 +1,12 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿
+using ManagementAngajati.Persistence.Entities;
 using Newtonsoft.Json;
 
 namespace ManagementAngajati.Models
 {
-
-    [Serializable]
-  
-    public class Angajat: Entity<long>
+    public class Angajat : Entity<long>
     {
-
-       /* [Key]
-        [JsonProperty("Id")]
-        public int Id { get; set; } */
-
+       
         [JsonProperty("Nume")]
         public String Nume { get; set; }
 
@@ -34,11 +28,12 @@ namespace ManagementAngajati.Models
         [JsonProperty("Experienta")]
         public int Experienta { get; set; }
 
-        public List<Post> Posturi { get; set; } = new List<Post>();
+        [JsonProperty("IdPosturi")]
+        public List<Post> IdPosturi { get; set; } = new List<Post>();
 
-        public Angajat(long id, string nume, string prenume, string username, string password, DateTime dataNasterii, string sex, int experienta, List<Post> posturi)
+        public Angajat(long id, string nume, string prenume, string username, string password, DateTime dataNasterii, string sex, int experienta, List<Post>posturi)
         {
-            ID = id;
+            ID = ID;
             Nume = nume;
             Prenume = prenume;
             Username = username;
@@ -46,26 +41,10 @@ namespace ManagementAngajati.Models
             DataNasterii = dataNasterii;
             Sex = sex;
             Experienta = experienta;
-            Posturi = posturi;
+            IdPosturi = posturi;
+            
         }
-
         public Angajat()
-        {
-
-        }
-
-        public override bool Equals(object? obj)
-        {
-            return obj is Angajat angajat &&
-                   ID == angajat.ID &&
-                   Nume == angajat.Nume &&
-                   Prenume == angajat.Prenume &&
-                   Username == angajat.Username &&
-                   Password == angajat.Password &&
-                   DataNasterii == angajat.DataNasterii &&
-                   Sex == angajat.Sex &&
-                   Experienta == angajat.Experienta &&
-                   EqualityComparer<List<Post>>.Default.Equals(Posturi, angajat.Posturi);
-        }
+        { }
     }
 }

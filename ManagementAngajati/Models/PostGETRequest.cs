@@ -4,9 +4,8 @@ using Newtonsoft.Json;
 namespace ManagementAngajati.Models
 
 {
-    public class PostRequestW2 : Entity<long>
+    public class PostGETRequest
     {
-
 
         [JsonProperty("Functie")]
 
@@ -18,18 +17,19 @@ namespace ManagementAngajati.Models
         [JsonProperty("Departament")]
         public String Departament { get; set; }
 
-        public List<Angajat> Angajati { get; set; } = new List<Angajat>();
+        [JsonProperty("IdAngajati")]
+        public List<long> IdAngajati { get; set; } = new List<long>();
 
-        public PostRequestW2( string functie, string detaliuFunctie, string departament, List<Angajat> angajati)
+        public PostGETRequest(string functie, string detaliuFunctie, string departament, List<long> angajati)
         {
            
             Functie = functie;
             DetaliuFunctie = detaliuFunctie;
             Departament = departament;
-            Angajati = angajati;
+            IdAngajati = angajati;
         }
 
-        public PostRequestW2()
+        public PostGETRequest()
         {
 
         }

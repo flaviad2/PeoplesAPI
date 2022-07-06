@@ -8,11 +8,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using ManagementAngajati.Models;
 using ManagementAngajati.Persistence.DbUtils;
 using ManagementAngajati.Persistence.Repository;
 using Microsoft.EntityFrameworkCore;
 using Xunit;
+using ManagementAngajati.Persistence.Entities;
+using ManagementAngajati.Persistence;
+using ManagementAngajati.Models;
 
 namespace TestsManagementAngajati
 {
@@ -24,53 +26,53 @@ namespace TestsManagementAngajati
         {
 
         }
-
+        
         public void SampleDataDb(DbContextOptions<ManagementAngajatiContext>? options)
         {
             using (var context = new ManagementAngajatiContext(options))
             {
 
-                List<Post> posturi_initial = new List<Post>();
-                List<Angajat> angajati_initial = new List<Angajat>();
+                List<PostEntity> posturi_initial = new List<PostEntity>();
+                List<AngajatEntity> angajati_initial = new List<AngajatEntity>();
 
-                Post p1 = new Post(1, "Tester", "Detalii functie", "Digital", angajati_initial);
-                Post p2 = new Post(2, "Scrum master", "Detalii functie detalii", "Digital", angajati_initial);
-                Post p3 = new Post(3, "Programator", "Alte detalii", "Digital", angajati_initial);
+                PostEntity p1 = new PostEntity(1, "Tester", "Detalii functie", "Digital", angajati_initial);
+                PostEntity p2 = new PostEntity(2, "Scrum master", "Detalii functie detalii", "Digital", angajati_initial);
+                PostEntity p3 = new PostEntity(3, "Programator", "Alte detalii", "Digital", angajati_initial);
 
-                Angajat a1 = new Angajat(1, "Pop", "Mihai", "mita", "parola1", DateTime.Now, "M", 2, posturi_initial);
-                Angajat a2 = new Angajat(2, "Codreanu", "Rares", "rares", "parola2", DateTime.Now, "M", 3, posturi_initial);
-                Angajat a3 = new Angajat(3, "Dorobat", "Flavia", "flavi", "parola3", DateTime.Now, "F", 0, posturi_initial);
+                AngajatEntity a1 = new AngajatEntity(1, "Pop", "Mihai", "mita", "parola1", DateTime.Now, "M", 2, posturi_initial);
+                AngajatEntity a2 = new AngajatEntity(2, "Codreanu", "Rares", "rares", "parola2", DateTime.Now, "M", 3, posturi_initial);
+                AngajatEntity a3 = new AngajatEntity(3, "Dorobat", "Flavia", "flavi", "parola3", DateTime.Now, "F", 0, posturi_initial);
 
                 //primul angajat poate lucra pe posturile p2 si p3
-                List<Post> posturi_first = new List<Post>();
+                List<PostEntity> posturi_first = new List<PostEntity>();
                 posturi_first.Add(p2);
                 posturi_first.Add(p3);
 
                 //pe primul post avem angajatii a2 si a3
-                List<Angajat> angajati_first = new List<Angajat>();
+                List<AngajatEntity> angajati_first = new List<AngajatEntity>();
                 angajati_first.Add(a2);
                 angajati_first.Add(a3);
 
 
-                List<Post> posturi_second = new List<Post>();
+                List<PostEntity> posturi_second = new List<PostEntity>();
                 posturi_second.Add(p1);
 
-                List<Angajat> angajati_second = new List<Angajat>();
+                List<AngajatEntity> angajati_second = new List<AngajatEntity>();
                 angajati_second.Add(a1);
 
-                List<Post> posturi_third = new List<Post>();
+                List<PostEntity> posturi_third = new List<PostEntity>();
                 posturi_third.Add(p1);
                 posturi_third.Add(p2);
                 posturi_first.Add(p3);
 
-                List<Angajat> angajati_third = new List<Angajat>();
+                List<AngajatEntity> angajati_third = new List<AngajatEntity>();
                 angajati_third.Add(a1);
                 angajati_third.Add(a2);
                 angajati_third.Add(a3);
 
-                a1.Posturi = posturi_first;
-                a2.Posturi = posturi_second;
-                a3.Posturi = posturi_third;
+                a1.IdPosturi = posturi_first;
+                a2.IdPosturi = posturi_second;
+                a3.IdPosturi = posturi_third;
 
                 p1.Angajati = angajati_first;
                 p2.Angajati = angajati_second;
@@ -85,20 +87,13 @@ namespace TestsManagementAngajati
                 context.Posturi.Add(p2);
                 context.Posturi.Add(p3);
 
-                /*
-                 * ID = id;
-            Angajat = angajat;
-            Post = post; 
-            DataAngajare = dataAngajare;
-            Salariu = salariu;
-            DataReziliere = dataReziliere;
-                */
+              
 
-                IstoricAngajat i1 = new IstoricAngajat(1, a1, p1, new DateTime(2021, 7, 10, 7, 10, 24), 3000, new DateTime(2023, 7, 10, 7, 10, 24));
-                IstoricAngajat i2 = new IstoricAngajat(2, a2, p2, new DateTime(2019, 8, 10, 7, 10, 24), 3500, new DateTime(2023, 7, 10, 7, 10, 24));
-                IstoricAngajat i3 = new IstoricAngajat(3, a3, p3, new DateTime(2021, 9, 10, 7, 10, 24), 2500, null);
-                IstoricAngajat i4 = new IstoricAngajat(4, a3, p1, new DateTime(2021, 9, 10, 7, 10, 24), 2500, null);
-                IstoricAngajat i5 = new IstoricAngajat(5, a3, p2, new DateTime(2021, 9, 10, 7, 10, 24), 2500, null);
+                IstoricAngajatEntity i1 = new IstoricAngajatEntity(1, a1, p1, new DateTime(2021, 7, 10, 7, 10, 24), 3000, new DateTime(2023, 7, 10, 7, 10, 24));
+                IstoricAngajatEntity i2 = new IstoricAngajatEntity(2, a2, p2, new DateTime(2019, 8, 10, 7, 10, 24), 3500, new DateTime(2023, 7, 10, 7, 10, 24));
+                IstoricAngajatEntity i3 = new IstoricAngajatEntity(3, a3, p3, new DateTime(2021, 9, 10, 7, 10, 24), 2500, null);
+                IstoricAngajatEntity i4 = new IstoricAngajatEntity(4, a3, p1, new DateTime(2021, 9, 10, 7, 10, 24), 2500, null);
+                IstoricAngajatEntity i5 = new IstoricAngajatEntity(5, a3, p2, new DateTime(2021, 9, 10, 7, 10, 24), 2500, null);
 
                 context.IstoricuriAngajati.Add(i1);
                 context.IstoricuriAngajati.Add(i2);
@@ -155,7 +150,7 @@ namespace TestsManagementAngajati
         public async Task AddIstoricAngajat_ValidCall()
         {
             var options = new DbContextOptionsBuilder<ManagementAngajatiContext>()
-                   .UseInMemoryDatabase(databaseName: "IstoricAngajatiDb2")
+                   .UseInMemoryDatabase(databaseName: "IstoricAngajatiDbb2")
                    .Options;
 
             SampleDataDb(options); 
@@ -168,7 +163,7 @@ namespace TestsManagementAngajati
 
                 Angajat angajat = repositoryAngajat.FindOne(1).Result;
 
-                IstoricAngajat istoricAngajat = await repositoryIstoricAngajat.Add(new IstoricAngajat { Angajat = angajat, DataAngajare = new DateTime(2021, 7, 10, 7, 10, 24), DataReziliere = new DateTime(2021, 7, 10, 7, 10, 24) });
+                IstoricAngajat istoricAngajat = await repositoryIstoricAngajat.Add(new IstoricAngajat { IdAngajat = angajat.ID, DataAngajare = new DateTime(2021, 7, 10, 7, 10, 24), DataReziliere = new DateTime(2021, 7, 10, 7, 10, 24) });
 
                 List<IstoricAngajat> istoricuriAngajat = repositoryIstoricAngajat.FindAll().Result;
 
@@ -230,7 +225,7 @@ namespace TestsManagementAngajati
 
                 Angajat angajat = repositoryAngajat.FindOne(1).Result;
 
-                IstoricAngajat newObj = new IstoricAngajat { ID=1, Angajat = angajat, DataAngajare = new DateTime(2010, 7, 10, 7, 10, 24), DataReziliere = new DateTime(2030, 7, 10, 7, 10, 24) };
+                IstoricAngajat  newObj = new IstoricAngajat { ID=1, IdAngajat = angajat.ID, DataAngajare = new DateTime(2010, 7, 10, 7, 10, 24), DataReziliere = new DateTime(2030, 7, 10, 7, 10, 24) };
 
                 IstoricAngajat istoricModif = repositoryIstoricAngajat.Update(newObj, 1).Result;
 
@@ -250,6 +245,6 @@ namespace TestsManagementAngajati
             }
 
 
-        }
+        }  
     }
 }

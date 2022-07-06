@@ -2,11 +2,11 @@
 
 namespace ManagementAngajati.Models
 {
-    public class IstoricAngajatRequest
+    public class IstoricAngajatGETRequest
     {
 
         [JsonProperty("IdAngajat")]
-        public long Angajat { get; set; }
+        public long IdAngajat { get; set; }
 
         [JsonProperty("IdPost")]
         public long Post { get; set; }
@@ -20,16 +20,16 @@ namespace ManagementAngajati.Models
         public DateTime? DataReziliere { get; set; }
 
 
-        public IstoricAngajatRequest( long angajat, long post, DateTime dataAngajare, int salariu, DateTime? dataReziliere)
+        public IstoricAngajatGETRequest( long angajat, long post, DateTime dataAngajare, int salariu, DateTime? dataReziliere)
         {
             
-            Angajat = angajat;
+            IdAngajat = angajat;
             Post = post;
             DataAngajare = dataAngajare;
             Salariu = salariu;
             DataReziliere = dataReziliere;
         }
-        public IstoricAngajatRequest()
+        public IstoricAngajatGETRequest()
         {
 
         }

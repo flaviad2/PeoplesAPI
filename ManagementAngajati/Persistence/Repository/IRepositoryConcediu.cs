@@ -2,7 +2,10 @@
 
 namespace ManagementAngajati.Persistence.Repository
 {
-    public interface IRepositoryConcediu : IRepository<long, Concediu>
+    public interface IRepositoryConcediu  : IRepository<long, Concediu>
     {
+      
+
+       
     }
 }

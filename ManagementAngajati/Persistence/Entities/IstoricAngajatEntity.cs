@@ -1,29 +1,19 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using ManagementAngajati.Models;
 using Newtonsoft.Json;
 
 namespace ManagementAngajati.Persistence.Entities
 
 {
-
-    public class IstoricAngajatEntity
+    public class IstoricAngajatEntity : Entity<long>
     {
-        [JsonProperty("Id")]
-        [Key]
-        public int Id { get; set; }
+
 
         [JsonProperty("Angajat")]
-
-
         public AngajatEntity Angajat { get; set; }
 
-
         [JsonProperty("Post")]
-
-
-        public Post Post { get; set; }
-
+        public PostEntity Post { get; set; }
 
         [JsonProperty("DataAngajare")]
         public DateTime DataAngajare { get; set; }
@@ -34,8 +24,9 @@ namespace ManagementAngajati.Persistence.Entities
         public DateTime? DataReziliere { get; set; }
 
 
-        public IstoricAngajatEntity(AngajatEntity angajat, Post post, DateTime dataAngajare, int salariu, DateTime? dataReziliere)
+        public IstoricAngajatEntity(long id, AngajatEntity angajat, PostEntity post, DateTime dataAngajare, int salariu, DateTime? dataReziliere)
         {
+            ID = id;
             Angajat = angajat;
             Post = post;
             DataAngajare = dataAngajare;
@@ -46,8 +37,6 @@ namespace ManagementAngajati.Persistence.Entities
         {
 
         }
-
-
 
     }
 }

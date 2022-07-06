@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using ManagementAngajati.Persistence.Entities;
+using Newtonsoft.Json;
 
 namespace ManagementAngajati.Models
 {

@@ -3,10 +3,9 @@ using Newtonsoft.Json;
 
 namespace ManagementAngajati.Models
 {
-    public class Concediu: Entity<long>
-    {
-       
-        [JsonProperty("Angajat")]
+    public class ConcediuGETRequest 
+    { 
+        [JsonProperty("IdAngajat")]
         public long IdAngajat { get; set; }
 
         [JsonProperty("DataIncepere")]
@@ -16,15 +15,14 @@ namespace ManagementAngajati.Models
         [JsonProperty("DataTerminare")]
         public DateTime DataTerminare { get; set; }
 
-        public Concediu(long id, long idAngajat, DateTime dataIncepere, DateTime dataTerminare)
+        public ConcediuGETRequest( long angajat, DateTime dataIncepere, DateTime dataTerminare)
         {
-            ID = id;
-            IdAngajat = idAngajat;
+            IdAngajat = angajat;
             DataIncepere = dataIncepere;
             DataTerminare = dataTerminare;
         }
 
-        public Concediu()
+        public ConcediuGETRequest()
         {
 
         }

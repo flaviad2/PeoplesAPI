@@ -1,4 +1,4 @@
-﻿using ManagementAngajati.Models;
+﻿using ManagementAngajati.Persistence.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace ManagementAngajati.Persistence.DbUtils
@@ -11,14 +11,13 @@ namespace ManagementAngajati.Persistence.DbUtils
         }
 
 
+        public DbSet<AngajatEntity> Angajati { get; set; }
 
-        public DbSet<Angajat> Angajati { get; set; }
+        public DbSet<PostEntity> Posturi { get; set; }
 
-        public DbSet<Post> Posturi { get; set; }
+        public DbSet<IstoricAngajatEntity> IstoricuriAngajati { get; set; }
 
-        public DbSet<IstoricAngajat> IstoricuriAngajati { get; set; }
-
-        public DbSet<Concediu> Concedii { get; set; }
+        public DbSet<ConcediuEntity> Concedii { get; set; }
 
         
 

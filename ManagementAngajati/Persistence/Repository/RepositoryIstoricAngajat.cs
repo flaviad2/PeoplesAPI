@@ -1,11 +1,14 @@
 ﻿using ManagementAngajati.Models;
+using AutoMapper;
 using ManagementAngajati.Persistence.DbUtils;
+using ManagementAngajati.Persistence.Entities;
 
 namespace ManagementAngajati.Persistence.Repository
 {
     public class RepositoryIstoricAngajat : IRepositoryIstoricAngajat
     {
-        private readonly ManagementAngajatiContext _context; 
+        private readonly ManagementAngajatiContext _context;
+        private readonly IMapper _mapper;
         
         public RepositoryIstoricAngajat(ManagementAngajatiContext context)
         {
@@ -21,29 +24,29 @@ namespace ManagementAngajati.Persistence.Repository
             return _context;
         }
 
-        //eroare ridicata de repo daca mai exista cu acelasi angajat si post
-        //exceptii suplimentare sa existe obiectele la care fac ref
-        public Task<IstoricAngajat> Add(IstoricAngajat entity)
+        
+        public async Task<IstoricAngajat> Add(IstoricAngajat entity)
         {
-            _context.IstoricuriAngajati.Add(entity);
+            IstoricAngajatEntity istoric = new IstoricAngajatEntity(entity.ID, _context.Angajati.Find(entity.IdAngajat), _context.Posturi.Find(entity.IdPost), entity.DataAngajare, entity.Salariu, entity.DataReziliere);
+            var added = _context.IstoricuriAngajati.Add(istoric).Entity;
             _context.SaveChanges();
+            entity.ID = added.ID;
+            return entity;
 
-            Task<IstoricAngajat> iTask = Task.FromResult(entity);
-            return iTask;
+            
         }
 
-        public Task<IstoricAngajat> Delete(long id)
+        public async Task<IstoricAngajat> Delete(long id)
         {
 
-            IstoricAngajat? deSters = _context.IstoricuriAngajati?.Find(id);
+            IstoricAngajatEntity? deSters = _context.IstoricuriAngajati?.Find(id);
 
-            if(deSters != null)
+            if (deSters != null)
             {
                 _context.IstoricuriAngajati.Remove(deSters);
                 _context.SaveChanges();
 
-                Task<IstoricAngajat> iTask = Task.FromResult(deSters);
-                return iTask;
+                return new IstoricAngajat(deSters.ID, deSters.Angajat.ID, deSters.Post.ID, deSters.DataAngajare, deSters.Salariu, deSters.DataReziliere);
             }
             return null; 
         }
@@ -51,7 +54,19 @@ namespace ManagementAngajati.Persistence.Repository
         public async Task<List<IstoricAngajat>> FindAll()
         {
             var dbIstoricuri = _context.IstoricuriAngajati.ToList();
-            return dbIstoricuri;
+            List<IstoricAngajat> res = new List<IstoricAngajat>();
+            for(int i=0; i<dbIstoricuri.Count; i++)
+            {
+                var dbIstoricAngajat = _context.IstoricuriAngajati.Where(a => a.ID == dbIstoricuri[i].ID).Select(c => c.Angajat);
+                var dbIstoricPost = _context.IstoricuriAngajati.Where(a => a.ID == dbIstoricuri[i].ID).Select(c => c.Post);
+                dbIstoricuri[i].Angajat = dbIstoricAngajat.SingleOrDefault();
+                dbIstoricuri[i].Post = dbIstoricPost.SingleOrDefault();
+                res.Add(new IstoricAngajat(dbIstoricuri[i].ID, dbIstoricuri[i].Angajat.ID, dbIstoricuri[i].Post.ID, dbIstoricuri[i].DataAngajare, dbIstoricuri[i].Salariu, dbIstoricuri[i].DataReziliere));
+
+
+            }
+            return res;
+            
         }
 
         public async Task<IstoricAngajat> FindOne(long id)
@@ -66,26 +81,27 @@ namespace ManagementAngajati.Persistence.Repository
                 dbIstoric.Angajat = dbAngajat;
                 dbIstoric.Post = dbPost;
             }
-            return dbIstoric;
+            return new IstoricAngajat(dbIstoric.ID, dbIstoric.Angajat.ID, dbIstoric.Post.ID, dbIstoric.DataAngajare, dbIstoric.Salariu, dbIstoric.DataReziliere);
 
         }
 
-        public Task<IstoricAngajat> Update(IstoricAngajat entity, long id)
+        public async Task<IstoricAngajat> Update(IstoricAngajat entity, long id)
         {
-            IstoricAngajat oldIstoric = _context.IstoricuriAngajati.Find(id);
+            IstoricAngajatEntity dbIstoric = _context.IstoricuriAngajati.Find(id);
+            IstoricAngajat oldIstoric =  new IstoricAngajat(dbIstoric.ID, dbIstoric.Angajat.ID, dbIstoric.Post.ID, dbIstoric.DataAngajare, dbIstoric.Salariu, dbIstoric.DataReziliere);
 
-            long idIstoric = oldIstoric.ID; 
 
             if(oldIstoric != null)
             {
-                oldIstoric.ID = idIstoric;
+                oldIstoric.ID = id;
                 oldIstoric.Salariu = entity.Salariu;
-                oldIstoric.Angajat = entity.Angajat;
+                oldIstoric.IdAngajat = entity.IdAngajat;
                 oldIstoric.DataReziliere = entity.DataReziliere;
                 oldIstoric.DataAngajare = entity.DataAngajare;
-
-                Task<IstoricAngajat> iTask = Task.FromResult(oldIstoric);
-                return iTask; 
+               
+                _context.Update(oldIstoric);
+                _context.SaveChanges();
+                return oldIstoric;
             }
 
             return null; 
@@ -93,8 +109,18 @@ namespace ManagementAngajati.Persistence.Repository
 
         public async Task<IstoricAngajat> FindOneByIdAngajat(long id)
         {
-            var dbIstoric = _context.IstoricuriAngajati.Where(a => a.Angajat.ID == id).SingleOrDefault();
-            return dbIstoric;
+            var dbIstoric = _context.IstoricuriAngajati.Where(i => i.Angajat.ID == id).SingleOrDefault();
+            if (dbIstoric != null)
+            {
+                var dbAngajat = _context.IstoricuriAngajati.Where(i => i.Angajat.ID == id).Select(c => c.Angajat).SingleOrDefault();
+                var dbPost = _context.IstoricuriAngajati.Where(i => i.Angajat.ID == id).Select(c => c.Post).SingleOrDefault();
+                dbIstoric.Angajat = dbAngajat;
+                dbIstoric.Post = dbPost;
+                return new IstoricAngajat(dbIstoric.ID, dbIstoric.Angajat.ID, dbIstoric.Post.ID, dbIstoric.DataAngajare, dbIstoric.Salariu, dbIstoric.DataReziliere);
+
+            }
+            return null;
+
         }
     }
 }

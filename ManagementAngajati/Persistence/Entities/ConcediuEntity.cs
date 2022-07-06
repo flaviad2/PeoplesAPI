@@ -2,14 +2,14 @@
 using Newtonsoft.Json;
 
 namespace ManagementAngajati.Persistence.Entities
+
 {
-
-
-    public class ConcediuEntity
+    public class ConcediuEntity : Entity<long>
     {
-        [Key]
-        [JsonProperty("Id")]
-        public int Id { get; set; }
+
+
+        [JsonProperty("Angajat")]
+        public AngajatEntity IdAngajat { get; set; }
 
         [JsonProperty("DataIncepere")]
         public DateTime DataIncepere { get; set; }
@@ -18,6 +18,17 @@ namespace ManagementAngajati.Persistence.Entities
         [JsonProperty("DataTerminare")]
         public DateTime DataTerminare { get; set; }
 
+        public ConcediuEntity(long id, AngajatEntity idAngajat, DateTime dataIncepere, DateTime dataTerminare)
+        {
+            ID = id;
+            IdAngajat = idAngajat;
+            DataIncepere = dataIncepere;
+            DataTerminare = dataTerminare;
+        }
 
+        public ConcediuEntity()
+        {
+
+        }
     }
 }

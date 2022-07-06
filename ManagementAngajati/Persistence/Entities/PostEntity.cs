@@ -1,16 +1,12 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using ManagementAngajati.Models;
 using Newtonsoft.Json;
 
 namespace ManagementAngajati.Persistence.Entities
-{
 
-    public class PostEntity
+{
+    public class PostEntity : Entity<long>
     {
 
-        [Key]
-        [JsonProperty("Id")]
-        public int Id { get; set; }
 
         [JsonProperty("Functie")]
 
@@ -22,9 +18,21 @@ namespace ManagementAngajati.Persistence.Entities
         [JsonProperty("Departament")]
         public string Departament { get; set; }
 
-        [JsonProperty("Angajati")]
+        public List<AngajatEntity> Angajati { get; set; } = new List<AngajatEntity>();
 
-        public List<AngajatEntity> Angajati { get; set; }
+        public PostEntity(long id, string functie, string detaliuFunctie, string departament, List<AngajatEntity> angajati)
+        {
+            ID = id;
+            Functie = functie;
+            DetaliuFunctie = detaliuFunctie;
+            Departament = departament;
+            Angajati = angajati;
+        }
+
+        public PostEntity()
+        {
+
+        }
 
 
 

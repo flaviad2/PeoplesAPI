@@ -1,4 +1,5 @@
 ﻿using ManagementAngajati.Models;
+using ManagementAngajati.Persistence.Entities;
 
 namespace ManagementAngajati.Utils
 {

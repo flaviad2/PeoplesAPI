@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace ManagementAngajati.Migrations
 {
-    public partial class InitialMigration : Migration
+    public partial class myMigration : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -49,7 +49,7 @@ namespace ManagementAngajati.Migrations
                 {
                     ID = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    AngajatID = table.Column<long>(type: "bigint", nullable: false),
+                    IdAngajatID = table.Column<long>(type: "bigint", nullable: false),
                     DataIncepere = table.Column<DateTime>(type: "datetime2", nullable: false),
                     DataTerminare = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
@@ -57,32 +57,32 @@ namespace ManagementAngajati.Migrations
                 {
                     table.PrimaryKey("PK_Concedii", x => x.ID);
                     table.ForeignKey(
-                        name: "FK_Concedii_Angajati_AngajatID",
-                        column: x => x.AngajatID,
+                        name: "FK_Concedii_Angajati_IdAngajatID",
+                        column: x => x.IdAngajatID,
                         principalTable: "Angajati",
                         principalColumn: "ID",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "AngajatPost",
+                name: "AngajatEntityPostEntity",
                 columns: table => new
                 {
                     AngajatiID = table.Column<long>(type: "bigint", nullable: false),
-                    PosturiID = table.Column<long>(type: "bigint", nullable: false)
+                    IdPosturiID = table.Column<long>(type: "bigint", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_AngajatPost", x => new { x.AngajatiID, x.PosturiID });
+                    table.PrimaryKey("PK_AngajatEntityPostEntity", x => new { x.AngajatiID, x.IdPosturiID });
                     table.ForeignKey(
-                        name: "FK_AngajatPost_Angajati_AngajatiID",
+                        name: "FK_AngajatEntityPostEntity_Angajati_AngajatiID",
                         column: x => x.AngajatiID,
                         principalTable: "Angajati",
                         principalColumn: "ID",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_AngajatPost_Posturi_PosturiID",
-                        column: x => x.PosturiID,
+                        name: "FK_AngajatEntityPostEntity_Posturi_IdPosturiID",
+                        column: x => x.IdPosturiID,
                         principalTable: "Posturi",
                         principalColumn: "ID",
                         onDelete: ReferentialAction.Cascade);
@@ -118,14 +118,14 @@ namespace ManagementAngajati.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_AngajatPost_PosturiID",
-                table: "AngajatPost",
-                column: "PosturiID");
+                name: "IX_AngajatEntityPostEntity_IdPosturiID",
+                table: "AngajatEntityPostEntity",
+                column: "IdPosturiID");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Concedii_AngajatID",
+                name: "IX_Concedii_IdAngajatID",
                 table: "Concedii",
-                column: "AngajatID");
+                column: "IdAngajatID");
 
             migrationBuilder.CreateIndex(
                 name: "IX_IstoricuriAngajati_AngajatID",
@@ -141,7 +141,7 @@ namespace ManagementAngajati.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "AngajatPost");
+                name: "AngajatEntityPostEntity");
 
             migrationBuilder.DropTable(
                 name: "Concedii");

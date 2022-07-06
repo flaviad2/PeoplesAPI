@@ -1,16 +1,15 @@
-﻿using Newtonsoft.Json;
+﻿using ManagementAngajati.Persistence.Entities;
+using Newtonsoft.Json;
 
 namespace ManagementAngajati.Models
 {
     public class ConcediuResponse : Entity<long>
     
     {
-        /* [Key]
-         [JsonProperty("Id")]
-         public int Id { get; set; } */
+       
 
         [JsonProperty("IdAngajat")]
-        public long Angajat { get; set; }   //id-ul angajatului
+        public long Angajat { get; set; }  
 
         [JsonProperty("DataIncepere")]
         public DateTime DataIncepere { get; set; }

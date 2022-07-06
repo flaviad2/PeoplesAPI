@@ -2,8 +2,13 @@
 
 namespace ManagementAngajati.Models
 {
-    public class AngajatRequest
+    //are ID, iar lista de Posturi e lista de IDs
+    public class AngajatPOSTRequest
     {
+       
+        [JsonProperty("ID")]
+
+        public long ID { get; set; }
 
         [JsonProperty("Nume")]
         public String Nume { get; set; }
@@ -26,9 +31,22 @@ namespace ManagementAngajati.Models
         [JsonProperty("Experienta")]
         public int Experienta { get; set; }
 
+        [JsonProperty("IdPosturi")]
 
-        //nu mai punem lista de posturi, iar adaugarea se face prin adaugare de Angajare
         public List<long> Posturi { get; set; } = new List<long>();
-        //lista cu id-urile posturilor
+
+        public AngajatPOSTRequest(long iD, string nume, string prenume, string username, string password, DateTime dataNasterii, string sex, int experienta, List<long> posturi)
+        {
+            ID = iD;
+            Nume = nume;
+            Prenume = prenume;
+            Username = username;
+            Password = password;
+            DataNasterii = dataNasterii;
+            Sex = sex;
+            Experienta = experienta;
+            Posturi = posturi;
+        }
+
     }
 }

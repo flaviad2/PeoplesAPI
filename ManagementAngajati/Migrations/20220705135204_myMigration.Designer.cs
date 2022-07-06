@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ManagementAngajati.Migrations
 {
     [DbContext(typeof(ManagementAngajatiContext))]
-    [Migration("20220628135715_InitialMigration")]
-    partial class InitialMigration
+    [Migration("20220705135204_myMigration")]
+    partial class myMigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -24,22 +24,22 @@ namespace ManagementAngajati.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
 
-            modelBuilder.Entity("AngajatPost", b =>
+            modelBuilder.Entity("AngajatEntityPostEntity", b =>
                 {
                     b.Property<long>("AngajatiID")
                         .HasColumnType("bigint");
 
-                    b.Property<long>("PosturiID")
+                    b.Property<long>("IdPosturiID")
                         .HasColumnType("bigint");
 
-                    b.HasKey("AngajatiID", "PosturiID");
+                    b.HasKey("AngajatiID", "IdPosturiID");
 
-                    b.HasIndex("PosturiID");
+                    b.HasIndex("IdPosturiID");
 
-                    b.ToTable("AngajatPost");
+                    b.ToTable("AngajatEntityPostEntity");
                 });
 
-            modelBuilder.Entity("ManagementAngajati.Models.Angajat", b =>
+            modelBuilder.Entity("ManagementAngajati.Persistence.AngajatEntity", b =>
                 {
                     b.Property<long>("ID")
                         .ValueGeneratedOnAdd()
@@ -78,7 +78,7 @@ namespace ManagementAngajati.Migrations
                     b.ToTable("Angajati");
                 });
 
-            modelBuilder.Entity("ManagementAngajati.Models.Concediu", b =>
+            modelBuilder.Entity("ManagementAngajati.Persistence.Entities.ConcediuEntity", b =>
                 {
                     b.Property<long>("ID")
                         .ValueGeneratedOnAdd()
@@ -86,23 +86,23 @@ namespace ManagementAngajati.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("ID"), 1L, 1);
 
-                    b.Property<long>("AngajatID")
-                        .HasColumnType("bigint");
-
                     b.Property<DateTime>("DataIncepere")
                         .HasColumnType("datetime2");
 
                     b.Property<DateTime>("DataTerminare")
                         .HasColumnType("datetime2");
 
+                    b.Property<long>("IdAngajatID")
+                        .HasColumnType("bigint");
+
                     b.HasKey("ID");
 
-                    b.HasIndex("AngajatID");
+                    b.HasIndex("IdAngajatID");
 
                     b.ToTable("Concedii");
                 });
 
-            modelBuilder.Entity("ManagementAngajati.Models.IstoricAngajat", b =>
+            modelBuilder.Entity("ManagementAngajati.Persistence.Entities.IstoricAngajatEntity", b =>
                 {
                     b.Property<long>("ID")
                         .ValueGeneratedOnAdd()
@@ -134,7 +134,7 @@ namespace ManagementAngajati.Migrations
                     b.ToTable("IstoricuriAngajati");
                 });
 
-            modelBuilder.Entity("ManagementAngajati.Models.Post", b =>
+            modelBuilder.Entity("ManagementAngajati.Persistence.Entities.PostEntity", b =>
                 {
                     b.Property<long>("ID")
                         .ValueGeneratedOnAdd()
@@ -159,41 +159,41 @@ namespace ManagementAngajati.Migrations
                     b.ToTable("Posturi");
                 });
 
-            modelBuilder.Entity("AngajatPost", b =>
+            modelBuilder.Entity("AngajatEntityPostEntity", b =>
                 {
-                    b.HasOne("ManagementAngajati.Models.Angajat", null)
+                    b.HasOne("ManagementAngajati.Persistence.AngajatEntity", null)
                         .WithMany()
                         .HasForeignKey("AngajatiID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("ManagementAngajati.Models.Post", null)
+                    b.HasOne("ManagementAngajati.Persistence.Entities.PostEntity", null)
                         .WithMany()
-                        .HasForeignKey("PosturiID")
+                        .HasForeignKey("IdPosturiID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("ManagementAngajati.Models.Concediu", b =>
+            modelBuilder.Entity("ManagementAngajati.Persistence.Entities.ConcediuEntity", b =>
                 {
-                    b.HasOne("ManagementAngajati.Models.Angajat", "Angajat")
+                    b.HasOne("ManagementAngajati.Persistence.AngajatEntity", "IdAngajat")
+                        .WithMany("Concedii")
+                        .HasForeignKey("IdAngajatID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("IdAngajat");
+                });
+
+            modelBuilder.Entity("ManagementAngajati.Persistence.Entities.IstoricAngajatEntity", b =>
+                {
+                    b.HasOne("ManagementAngajati.Persistence.AngajatEntity", "Angajat")
                         .WithMany()
                         .HasForeignKey("AngajatID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Angajat");
-                });
-
-            modelBuilder.Entity("ManagementAngajati.Models.IstoricAngajat", b =>
-                {
-                    b.HasOne("ManagementAngajati.Models.Angajat", "Angajat")
-                        .WithMany()
-                        .HasForeignKey("AngajatID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("ManagementAngajati.Models.Post", "Post")
+                    b.HasOne("ManagementAngajati.Persistence.Entities.PostEntity", "Post")
                         .WithMany()
                         .HasForeignKey("PostID")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -202,6 +202,11 @@ namespace ManagementAngajati.Migrations
                     b.Navigation("Angajat");
 
                     b.Navigation("Post");
+                });
+
+            modelBuilder.Entity("ManagementAngajati.Persistence.AngajatEntity", b =>
+                {
+                    b.Navigation("Concedii");
                 });
 #pragma warning restore 612, 618
         }

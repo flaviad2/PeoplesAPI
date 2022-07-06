@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using ManagementAngajati.Models;
 using ManagementAngajati.Persistence.Repository;
 using ManagementAngajati.Utils;
+using ManagementAngajati.Persistence.Entities;
 
 namespace ManagementAngajati.Controllers
 {
@@ -66,25 +67,39 @@ namespace ManagementAngajati.Controllers
 
         [HttpPut]
         [Route("api/[controller]/{id}")]
-        public IActionResult EditIstoric(int id, IstoricAngajatRequest istoricAngajatRequest)
+        public IActionResult EditIstoric(int id, IstoricAngajatPOSTRequest istoricAngajatRequest)
         {
-            IstoricAngajat istoric = Converter.IstoricW2ToIstoric(IstoricRequestToW2(istoricAngajatRequest));
-            IstoricAngajat istoricModificat = _istoricData.Update(istoric, id).Result;
-
-            if (istoricModificat != null)
+            try
             {
-                return Ok(Converter.IstoricToIstoricResponse(istoricModificat));
+                IstoricAngajat istoric = IstoricPostRequestToIstoric(istoricAngajatRequest);
+                IstoricAngajat istoricModificat = _istoricData.Update(istoric, id).Result;
+
+                if (istoricModificat != null)
+                {
+                    return Ok(Converter.IstoricToIstoricResponse(istoricModificat));
+                }
+                else return NotFound($"Istoricul cu id {id}  nu a fost gasit!");
             }
-            else return NotFound($"Istoricul cu id {id}  nu a fost gasit!");
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
         }
 
         [HttpPost]
         [Route("api/[controller]")]
-        public IActionResult PostIstoric(IstoricAngajatRequest istoricAngajatRequest)
+        public IActionResult PostIstoric(IstoricAngajatPOSTRequest istoricAngajatRequest)
         {
-            IstoricAngajat istoric = Converter.IstoricW2ToIstoric(IstoricRequestToW2(istoricAngajatRequest));
-            IstoricAngajat added = _istoricData.Add(istoric).Result; 
-            return Ok(Converter.IstoricToIstoricResponse(added));
+            try
+            {
+                IstoricAngajat istoric = IstoricPostRequestToIstoric(istoricAngajatRequest);
+                IstoricAngajat added = _istoricData.Add(istoric).Result;
+                return Ok(Converter.IstoricToIstoricResponse(added));
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
         }
 
 
@@ -93,23 +108,30 @@ namespace ManagementAngajati.Controllers
         [Route("api/[controller]/{id}")]
         public IActionResult DeleteIstoric(int id)
         {
-            var istoric = _istoricData.FindOne(id).Result; 
-            if(istoric!=null)
+            try
             {
-                _istoricData.Delete(id);
-                return Ok(); 
+                var istoric = _istoricData.FindOne(id).Result;
+                if (istoric != null)
+                {
+                    _istoricData.Delete(id);
+                    return Ok();
+                }
+                return NotFound($"Istoricul cu id {id} nu a fost gasit!");
             }
-            return NotFound($"Istoricul cu id {id} nu a fost gasit!"); 
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
         }
 
         /////////////////////////////////// Conversii /////////////////////////
         ///
-        private IstoricAngajatRequestW2 IstoricRequestToW2 (IstoricAngajatRequest istoricAngajatRequest)
+        private IstoricAngajat IstoricPostRequestToIstoric (IstoricAngajatPOSTRequest istoricAngajatRequest)
         {
-            Angajat aID = _angajatData.FindOne(istoricAngajatRequest.Angajat).Result;
+            Angajat aID = _angajatData.FindOne(istoricAngajatRequest.IdAngajat).Result;
             Post pID = _postData.FindOne(istoricAngajatRequest.Post).Result;
 
-            return new IstoricAngajatRequestW2(aID, pID, istoricAngajatRequest.DataAngajare, istoricAngajatRequest.Salariu, istoricAngajatRequest.DataReziliere); 
+            return new IstoricAngajat(istoricAngajatRequest.ID,aID.ID, pID.ID, istoricAngajatRequest.DataAngajare, istoricAngajatRequest.Salariu, istoricAngajatRequest.DataReziliere); 
         }
     }
 }

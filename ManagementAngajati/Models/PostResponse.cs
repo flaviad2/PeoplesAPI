@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using ManagementAngajati.Persistence.Entities;
 using Newtonsoft.Json;
 
 namespace ManagementAngajati.Models
@@ -20,6 +21,12 @@ namespace ManagementAngajati.Models
         [JsonProperty("IdAngajati")]
         public List<long> Angajati { get; set; } = new List<long>();
 
+        
+        public PostResponse()
+        {
+
+        }
+
         public PostResponse(long id, string functie, string detaliuFunctie, string departament, List<long> angajati)
         {
             ID = id;
@@ -27,11 +34,6 @@ namespace ManagementAngajati.Models
             DetaliuFunctie = detaliuFunctie;
             Departament = departament;
             Angajati = angajati;
-        }
-
-        public PostResponse()
-        {
-
         }
 
 

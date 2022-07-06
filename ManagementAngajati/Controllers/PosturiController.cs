@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using ManagementAngajati.Utils;
 using ManagementAngajati.Models;
+using ManagementAngajati.Persistence.Entities;
 
 namespace ManagementAngajati.Controllers
 {
@@ -47,56 +48,63 @@ namespace ManagementAngajati.Controllers
 
         [HttpPost]
         [Route("api/[controller]")]
-        public IActionResult PostPost(PostRequest postRequest)
+        public IActionResult PostPost(PostPOSTRequest postRequest)
         {
-            Post post = Converter.PostW2ToPost(PostRequestToW2(postRequest));
-            Post added = _postData.Add(post).Result;
-
-            //Daca postul are angajati, se adauga si la repo de angajati 
-            List<Angajat> listAngajati = added.Angajati.ToList(); 
-
-            //facem update la fiecare angajat, punand postul la care e arondat
-            foreach(Angajat angajat in listAngajati)
+            try
             {
-                List<Post> newPosturi = angajat.Posturi;
-                if (!newPosturi.Contains(added))
+                Post post = PostRequestToPost(postRequest); 
+                Post added = _postData.Add(post).Result;
+
+                //Daca postul are angajati, se adauga si la repo de angajati 
+                List<Angajat> listAngajati = added.IdAngajati.ToList();
+
+                //facem update la fiecare angajat, punand postul la care e arondat
+                foreach (Angajat angajat in listAngajati)
                 {
-                    newPosturi.Add(added);
-                    Angajat newAngajat = new Angajat(angajat.ID, angajat.Nume, angajat.Prenume, angajat.Username, angajat.Password, angajat.DataNasterii, angajat.Sex, angajat.Experienta, newPosturi);
-                    _angajatData.Update(newAngajat, angajat.ID);
+                    List<Post> newPosturi = angajat.IdPosturi;
+                    if (!newPosturi.Contains(added))
+                    {
+                        newPosturi.Add(added);
+                        Angajat newAngajat = new Angajat(angajat.ID, angajat.Nume, angajat.Prenume, angajat.Username, angajat.Password, angajat.DataNasterii, angajat.Sex, angajat.Experienta, newPosturi);
+                        _angajatData.Update(newAngajat, angajat.ID);
+                    }
                 }
+                return Ok(Converter.PostToPostResponse(added));
             }
-            return Ok(Converter.PostToPostResponse(added)); 
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
         }
 
         [HttpPut]
         [Route("api/[controller]/{id}")]
-        public IActionResult EditPost(int id, PostRequest postRequest)
+        public async Task<IActionResult> EditPostAsync(int id, PostPOSTRequest postRequest)
         {
-            Post post = Converter.PostW2ToPost(PostRequestToW2(postRequest));
+            Post post = PostRequestToPost(postRequest);
             Post postVechi = _postData.FindOne(id).Result;
-            Post postModificat = _postData.Update(post, id).Result;
+            Post postModificat = await _postData.Update(post, id);
 
             if (postModificat != null)
             {
                 PostResponse postResponse = Converter.PostToPostResponse(postModificat);
 
-                if (!Helper.IsEqualListOfAngajati(post.Angajati, postVechi.Angajati))
+                if (!Helper.IsEqualListOfAngajati(post.IdAngajati, postVechi.IdAngajati))
                 {
                     List<Angajat> angajatiForUpdate = _angajatData.FindAll().Result;
 
                     foreach (Angajat angajat in angajatiForUpdate)
                     {
-                        if (!angajat.Posturi.Contains(postModificat) && postModificat.Angajati.Contains(angajat))
+                        if (!angajat.IdPosturi.Contains(postModificat) && postModificat.IdAngajati.Contains(angajat))
                         {
-                            List<Post> posturiAngajat = angajat.Posturi;
+                            List<Post> posturiAngajat = angajat.IdPosturi;
                             posturiAngajat.Add(postModificat);
                             Angajat angajatModificat = new Angajat(angajat.ID, angajat.Nume, angajat.Prenume, angajat.Username, angajat.Password, angajat.DataNasterii, angajat.Sex, angajat.Experienta, posturiAngajat);
                             _angajatData.Update(angajatModificat, angajatModificat.ID);
                         }
-                        else if (angajat.Posturi.Contains(postModificat) && !postModificat.Angajati.Contains(angajat))
+                        else if (angajat.IdPosturi.Contains(postModificat) && !postModificat.IdAngajati.Contains(angajat))
                         {
-                            List<Post> posturiAngajat = angajat.Posturi;
+                            List<Post> posturiAngajat = angajat.IdPosturi;
                             posturiAngajat.Remove(postModificat);
                             Angajat angajatModificat = new Angajat(angajat.ID, angajat.Nume, angajat.Prenume, angajat.Username, angajat.Password, angajat.DataNasterii, angajat.Sex, angajat.Experienta, posturiAngajat);
                             _angajatData.Update(angajatModificat, angajatModificat.ID);
@@ -119,10 +127,10 @@ namespace ManagementAngajati.Controllers
                 _postData.Delete(post.ID);
                 //cand stergem un post din repo, trebuie sa il stergem de la toti angajatii la care e arondat 
 
-                List<Angajat> angajatiPost = post.Angajati; 
+                List<Angajat> angajatiPost = post.IdAngajati; 
                 foreach(Angajat angajat in angajatiPost)
                 {
-                    List<Post> posturiDeModif = angajat.Posturi;
+                    List<Post> posturiDeModif = angajat.IdPosturi;
                     posturiDeModif.Remove(post);
 
                     Angajat angajatNou = new Angajat(angajat.ID, angajat.Nume, angajat.Prenume, angajat.Username, angajat.Password, angajat.DataNasterii, angajat.Sex, angajat.Experienta, posturiDeModif);
@@ -143,14 +151,14 @@ namespace ManagementAngajati.Controllers
 
 
         ////////////////////////////////////////////////////////////// Conversii //////////////////////////////////////
-        private PostRequestW2 PostRequestToW2(PostRequest postRequest)
+        private Post PostRequestToPost(PostPOSTRequest postRequest)
         {
             List<Angajat> angajati = new List<Angajat>(); 
-            foreach(long i in postRequest.Angajati)
+            foreach(long i in postRequest.IdAngajati)
             {
                 angajati.Add(_angajatData.FindOne(i).Result); 
             }
-            return new PostRequestW2(postRequest.Functie, postRequest.DetaliuFunctie, postRequest.Departament, angajati); 
+            return new Post(postRequest.ID, postRequest.Functie, postRequest.DetaliuFunctie, postRequest.Departament, angajati); 
         }
     }
 }

@@ -2,11 +2,13 @@
 
 namespace ManagementAngajati.Models
 {
-    public class ConcediuRequest 
-    { 
-        [JsonProperty("IdAngajat")]
-        public long Angajat { get; set; }
+    public class ConcediuPOSTRequest
+    {
+        [JsonProperty("ID")]
+        public long ID { get; set; }
 
+        [JsonProperty("IdAngajat")]
+        public long IdAngajat { get; set; }
         [JsonProperty("DataIncepere")]
         public DateTime DataIncepere { get; set; }
 
@@ -14,16 +16,21 @@ namespace ManagementAngajati.Models
         [JsonProperty("DataTerminare")]
         public DateTime DataTerminare { get; set; }
 
-        public ConcediuRequest( long angajat, DateTime dataIncepere, DateTime dataTerminare)
+        public ConcediuPOSTRequest(long angajat, DateTime dataIncepere, DateTime dataTerminare)
         {
-            Angajat = angajat;
+
+            IdAngajat = angajat;
             DataIncepere = dataIncepere;
             DataTerminare = dataTerminare;
         }
 
-        public ConcediuRequest()
+        public ConcediuPOSTRequest()
         {
 
         }
+
+       
+       
+     
     }
 }
