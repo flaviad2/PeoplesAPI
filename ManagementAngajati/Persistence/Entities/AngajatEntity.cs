@@ -35,7 +35,7 @@ namespace ManagementAngajati.Persistence
 
         public List<ConcediuEntity>? Concedii { get; set; } = new List<ConcediuEntity>();
 
-        public IstoricAngajatEntity? IstoricAngajat; 
+        public IstoricAngajatEntity? IstoricAngajat = new IstoricAngajatEntity();
        
 
         public AngajatEntity()
@@ -55,7 +55,7 @@ namespace ManagementAngajati.Persistence
             Experienta = experienta;
             IdPosturi = posturi;
             Concedii = new List<ConcediuEntity>();
-            IstoricAngajat = null;
+            IstoricAngajat = new IstoricAngajatEntity();
         }
 
         public override bool Equals(object? obj)

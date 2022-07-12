@@ -1,6 +1,6 @@
 ﻿using Newtonsoft.Json;
 
-namespace ManagementAngajati.Models
+namespace ManagementAngajati.Models.IstoricAngajatModel
 {
     public class IstoricAngajatGETRequest
     {
@@ -20,9 +20,9 @@ namespace ManagementAngajati.Models
         public DateTime? DataReziliere { get; set; }
 
 
-        public IstoricAngajatGETRequest( long angajat, long post, DateTime dataAngajare, int salariu, DateTime? dataReziliere)
+        public IstoricAngajatGETRequest(long angajat, long post, DateTime dataAngajare, int salariu, DateTime? dataReziliere)
         {
-            
+
             IdAngajat = angajat;
             Post = post;
             DataAngajare = dataAngajare;

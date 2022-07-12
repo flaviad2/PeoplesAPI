@@ -1,25 +1,25 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using Newtonsoft.Json;
 
-namespace ManagementAngajati.Models
+namespace ManagementAngajati.Models.PostModel
 
 {
     public class PostPOSTRequest
     {
-        
+
         [JsonProperty("ID")]
 
         public long ID { get; set; }
 
         [JsonProperty("Functie")]
 
-        public String Functie { get; set; }
+        public string Functie { get; set; }
 
         [JsonProperty("DetaliuFunctie")]
-        public String DetaliuFunctie { get; set; }
+        public string DetaliuFunctie { get; set; }
 
         [JsonProperty("Departament")]
-        public String Departament { get; set; }
+        public string Departament { get; set; }
 
         [JsonProperty("IdAngajati")]
         public List<long> IdAngajati { get; set; } = new List<long>();

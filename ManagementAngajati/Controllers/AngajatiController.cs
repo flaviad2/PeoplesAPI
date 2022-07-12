@@ -1,4 +1,5 @@
-﻿using ManagementAngajati.Models;
+﻿using ManagementAngajati.Models.AngajatModel;
+using ManagementAngajati.Models.PostModel;
 using ManagementAngajati.Persistence.Entities;
 using ManagementAngajati.Persistence.Repository;
 using ManagementAngajati.Utils;
@@ -12,7 +13,6 @@ namespace ManagementAngajati.Controllers
     {
         private IRepositoryAngajat _angajatData;
         private IRepositoryPost _postData; 
-
 
         public EmployeesController(IRepositoryAngajat repositoryAngajat, IRepositoryPost repositoryPost)
         {

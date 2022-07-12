@@ -1,29 +1,29 @@
-﻿
+﻿using ManagementAngajati.Models.PostModel;
 using ManagementAngajati.Persistence.Entities;
 using Newtonsoft.Json;
 
-namespace ManagementAngajati.Models
+namespace ManagementAngajati.Models.AngajatModel
 {
     public class Angajat : Entity<long>
     {
-       
+
         [JsonProperty("Nume")]
-        public String Nume { get; set; }
+        public string Nume { get; set; }
 
         [JsonProperty("Prenume")]
-        public String Prenume { get; set; }
+        public string Prenume { get; set; }
 
         [JsonProperty("Username")]
-        public String Username { get; set; }
+        public string Username { get; set; }
 
         [JsonProperty("Password")]
-        public String Password { get; set; }
+        public string Password { get; set; }
 
         [JsonProperty("DataNasterii")]
         public DateTime DataNasterii { get; set; }
 
         [JsonProperty("Sex")]
-        public String Sex { get; set; }
+        public string Sex { get; set; }
 
         [JsonProperty("Experienta")]
         public int Experienta { get; set; }
@@ -31,7 +31,7 @@ namespace ManagementAngajati.Models
         [JsonProperty("IdPosturi")]
         public List<Post> IdPosturi { get; set; } = new List<Post>();
 
-        public Angajat(long id, string nume, string prenume, string username, string password, DateTime dataNasterii, string sex, int experienta, List<Post>posturi)
+        public Angajat(long id, string nume, string prenume, string username, string password, DateTime dataNasterii, string sex, int experienta, List<Post> posturi)
         {
             ID = ID;
             Nume = nume;
@@ -42,7 +42,7 @@ namespace ManagementAngajati.Models
             Sex = sex;
             Experienta = experienta;
             IdPosturi = posturi;
-            
+
         }
         public Angajat()
         { }

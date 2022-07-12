@@ -1,11 +1,13 @@
-﻿using ManagementAngajati.Persistence.Entities;
+﻿using ManagementAngajati.Models.AngajatModel;
+using ManagementAngajati.Persistence.Entities;
 using Newtonsoft.Json;
 
-namespace ManagementAngajati.Models
+
+namespace ManagementAngajati.Models.ConcediuModel
 {
-    public class Concediu: Entity<long>
+    public class Concediu : Entity<long>
     {
-       
+
         [JsonProperty("Angajat")]
         public Angajat IdAngajat { get; set; }
 

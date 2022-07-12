@@ -1,6 +1,8 @@
 ﻿using System.Data;
 using AutoMapper;
-using ManagementAngajati.Models;
+using ManagementAngajati.Models.AngajatModel;
+using ManagementAngajati.Models.ConcediuModel;
+using ManagementAngajati.Models.PostModel;
 using ManagementAngajati.Persistence.DbUtils;
 using ManagementAngajati.Persistence.Entities;
 using ManagementAngajati.Utils;
@@ -13,10 +15,8 @@ namespace ManagementAngajati.Persistence.Repository
         private readonly ManagementAngajatiContext _context;
 
         private IMapper _mapper;
-        //mapeaza de la Entity la Object 
 
         private IMapper _mapper2;
-        //mapeaza de la Object la Entity 
 
         public RepositoryConcediu(ManagementAngajatiContext context)
         {
@@ -146,10 +146,7 @@ namespace ManagementAngajati.Persistence.Repository
                 oldConcediu.ID = id;
                 oldConcediu.DataIncepere = entity.DataIncepere;
                 oldConcediu.DataTerminare = entity.DataTerminare;
-                //iau angajatul pt acest concediu 
-              
                 _context.Concedii.Update(oldConcediu);
-
                 _context.SaveChanges();
 
                 entity.ID = id;

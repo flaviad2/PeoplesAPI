@@ -2,10 +2,12 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using ManagementAngajati.Models;
 using ManagementAngajati.Persistence.Repository;
 using ManagementAngajati.Utils;
 using ManagementAngajati.Persistence.Entities;
+using ManagementAngajati.Models.AngajatModel;
+using ManagementAngajati.Models.PostModel;
+using ManagementAngajati.Models.IstoricAngajatModel;
 
 namespace ManagementAngajati.Controllers
 {
@@ -37,6 +39,7 @@ namespace ManagementAngajati.Controllers
             }
             return NoContent();
         }
+
 
         [HttpGet]
         [Route("api/EmployeeHistory/{idEmployeeHistory}")]
@@ -127,7 +130,7 @@ namespace ManagementAngajati.Controllers
         }
 
         /////////////////////////////////// Conversii /////////////////////////
-        ///
+        
         private IstoricAngajat IstoricPostRequestToIstoric (IstoricAngajatPOSTRequest istoricAngajatRequest)
         {
             Angajat aID = _angajatData.FindOne(istoricAngajatRequest.IdAngajat).Result;

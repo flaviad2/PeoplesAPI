@@ -1,4 +1,4 @@
-﻿using ManagementAngajati.Models;
+﻿using ManagementAngajati.Models.ConcediuModel;
 
 namespace ManagementAngajati.Persistence.Repository
 {

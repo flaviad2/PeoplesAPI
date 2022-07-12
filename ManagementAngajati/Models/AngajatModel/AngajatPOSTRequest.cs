@@ -1,32 +1,31 @@
 ﻿using Newtonsoft.Json;
 
-namespace ManagementAngajati.Models
+namespace ManagementAngajati.Models.AngajatModel
 {
-    //are ID, iar lista de Posturi e lista de IDs
     public class AngajatPOSTRequest
     {
-       
+
         [JsonProperty("ID")]
 
         public long ID { get; set; }
 
         [JsonProperty("Nume")]
-        public String Nume { get; set; }
+        public string Nume { get; set; }
 
         [JsonProperty("Prenume")]
-        public String Prenume { get; set; }
+        public string Prenume { get; set; }
 
         [JsonProperty("Username")]
-        public String Username { get; set; }
+        public string Username { get; set; }
 
         [JsonProperty("Password")]
-        public String Password { get; set; }
+        public string Password { get; set; }
 
         [JsonProperty("DataNasterii")]
         public DateTime DataNasterii { get; set; }
 
         [JsonProperty("Sex")]
-        public String Sex { get; set; }
+        public string Sex { get; set; }
 
         [JsonProperty("Experienta")]
         public int Experienta { get; set; }

@@ -1,9 +1,10 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using ManagementAngajati.Models;
 using ManagementAngajati.Persistence.Repository;
 using ManagementAngajati.Utils;
 using ManagementAngajati.Persistence.Entities;
+using ManagementAngajati.Models.AngajatModel;
+using ManagementAngajati.Models.ConcediuModel;
 
 namespace ManagementAngajati.Controllers
 {
@@ -122,7 +123,7 @@ namespace ManagementAngajati.Controllers
 
        
         //////////////////////////////////////////////////////////// Conversii ////////////////////////
-        ///
+        
         private Concediu ConcediuPostRequestToConcediu  (ConcediuPOSTRequest concediuRequest)
         {
             Angajat aID = _angajatData.FindOne(concediuRequest.IdAngajat).Result;

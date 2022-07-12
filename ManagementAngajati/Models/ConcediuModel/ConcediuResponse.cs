@@ -1,14 +1,15 @@
 ﻿using ManagementAngajati.Persistence.Entities;
 using Newtonsoft.Json;
+using ManagementAngajati.Models.AngajatModel;
 
-namespace ManagementAngajati.Models
+namespace ManagementAngajati.Models.ConcediuModel
 {
     public class ConcediuResponse : Entity<long>
-    
-    {
-       
 
-       
+    {
+
+
+
 
         [JsonProperty("DataIncepere")]
         public DateTime DataIncepere { get; set; }

@@ -1,5 +1,8 @@
-﻿using ManagementAngajati.Models;
-using ManagementAngajati.Persistence; 
+﻿using ManagementAngajati.Models.AngajatModel;
+using ManagementAngajati.Models.ConcediuModel;
+using ManagementAngajati.Models.IstoricAngajatModel;
+using ManagementAngajati.Models.PostModel;
+using ManagementAngajati.Persistence;
 
 namespace ManagementAngajati.Utils
 {

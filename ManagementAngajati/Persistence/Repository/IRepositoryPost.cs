@@ -1,4 +1,4 @@
-﻿using ManagementAngajati.Models;
+﻿using ManagementAngajati.Models.PostModel;
 
 namespace ManagementAngajati.Persistence.Repository
 

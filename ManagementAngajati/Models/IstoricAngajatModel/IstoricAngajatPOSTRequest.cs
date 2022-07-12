@@ -1,6 +1,6 @@
 ﻿using Newtonsoft.Json;
 
-namespace ManagementAngajati.Models
+namespace ManagementAngajati.Models.IstoricAngajatModel
 {
     public class IstoricAngajatPOSTRequest
     {
@@ -34,5 +34,5 @@ namespace ManagementAngajati.Models
         public IstoricAngajatPOSTRequest()
         {
         }
-        }
     }
+}

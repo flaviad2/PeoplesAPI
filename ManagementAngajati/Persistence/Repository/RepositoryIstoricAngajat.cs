@@ -1,7 +1,9 @@
-﻿using ManagementAngajati.Models;
-using AutoMapper;
+﻿using AutoMapper;
 using ManagementAngajati.Persistence.DbUtils;
 using ManagementAngajati.Persistence.Entities;
+using ManagementAngajati.Models.AngajatModel;
+using ManagementAngajati.Models.PostModel;
+using ManagementAngajati.Models.IstoricAngajatModel;
 
 namespace ManagementAngajati.Persistence.Repository
 {

@@ -1,14 +1,13 @@
-﻿using Newtonsoft.Json;
+﻿using ManagementAngajati.Persistence.Entities;
+using Newtonsoft.Json;
 
-namespace ManagementAngajati.Models
+namespace ManagementAngajati.Models.ConcediuModel
 {
-    public class ConcediuPOSTRequest
+    public class ConcediuGETRequest
     {
-        [JsonProperty("ID")]
-        public long ID { get; set; }
-
         [JsonProperty("IdAngajat")]
         public long IdAngajat { get; set; }
+
         [JsonProperty("DataIncepere")]
         public DateTime DataIncepere { get; set; }
 
@@ -16,21 +15,16 @@ namespace ManagementAngajati.Models
         [JsonProperty("DataTerminare")]
         public DateTime DataTerminare { get; set; }
 
-        public ConcediuPOSTRequest(long angajat, DateTime dataIncepere, DateTime dataTerminare)
+        public ConcediuGETRequest(long angajat, DateTime dataIncepere, DateTime dataTerminare)
         {
-
             IdAngajat = angajat;
             DataIncepere = dataIncepere;
             DataTerminare = dataTerminare;
         }
 
-        public ConcediuPOSTRequest()
+        public ConcediuGETRequest()
         {
 
         }
-
-       
-       
-     
     }
 }

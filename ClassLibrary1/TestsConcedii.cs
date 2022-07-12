@@ -14,7 +14,9 @@ using Microsoft.EntityFrameworkCore;
 using Xunit;
 using ManagementAngajati.Persistence.Entities;
 using ManagementAngajati.Persistence;
-using ManagementAngajati.Models;
+using ManagementAngajati.Models.AngajatModel;
+using ManagementAngajati.Models.ConcediuModel;
+using ManagementAngajati.Models.PostModel;
 
 namespace TestsManagementAngajati
 {

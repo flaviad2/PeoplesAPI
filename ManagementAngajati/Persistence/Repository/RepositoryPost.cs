@@ -1,6 +1,7 @@
 ﻿using System.Data;
 using AutoMapper;
-using ManagementAngajati.Models;
+using ManagementAngajati.Models.AngajatModel;
+using ManagementAngajati.Models.PostModel;
 using ManagementAngajati.Persistence.DbUtils;
 using ManagementAngajati.Persistence.Entities;
 using ManagementAngajati.Utils;

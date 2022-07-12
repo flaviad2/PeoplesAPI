@@ -1,4 +1,5 @@
-﻿using ManagementAngajati.Models;
+﻿using ManagementAngajati.Models.AngajatModel;
+using ManagementAngajati.Models.PostModel;
 using ManagementAngajati.Persistence.Entities;
 
 namespace ManagementAngajati.Utils

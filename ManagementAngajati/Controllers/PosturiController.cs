@@ -2,8 +2,9 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using ManagementAngajati.Utils;
-using ManagementAngajati.Models;
 using ManagementAngajati.Persistence.Entities;
+using ManagementAngajati.Models.AngajatModel;
+using ManagementAngajati.Models.PostModel;
 
 namespace ManagementAngajati.Controllers
 {

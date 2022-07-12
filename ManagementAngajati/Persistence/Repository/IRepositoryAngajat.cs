@@ -1,6 +1,6 @@
 ﻿
 using System.Data;
-using ManagementAngajati.Models;
+using ManagementAngajati.Models.AngajatModel;
 
 namespace ManagementAngajati.Persistence.Repository
 {

@@ -1,4 +1,4 @@
-﻿using ManagementAngajati.Models;
+﻿using ManagementAngajati.Models.IstoricAngajatModel;
 
 namespace ManagementAngajati.Persistence.Repository
 {
