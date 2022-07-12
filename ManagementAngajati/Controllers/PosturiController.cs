@@ -9,12 +9,12 @@ namespace ManagementAngajati.Controllers
 {
     [Route("")]
     [ApiController]
-    public class PosturiController : ControllerBase
+    public class PositionsController : ControllerBase
     {
         private IRepositoryAngajat _angajatData;
         private IRepositoryPost _postData; 
 
-        public PosturiController(IRepositoryAngajat angajatData, IRepositoryPost postData)
+        public PositionsController(IRepositoryAngajat angajatData, IRepositoryPost postData)
         {
             _angajatData = angajatData;
             _postData = postData;

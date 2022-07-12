@@ -11,14 +11,14 @@ namespace ManagementAngajati.Controllers
 {
     [Route("")]
     [ApiController]
-    public class IstoricuriController : ControllerBase
+    public class EmployeesHistoryController : ControllerBase
     {
 
         private IRepositoryAngajat _angajatData;
         private IRepositoryIstoricAngajat _istoricData;
         private IRepositoryPost _postData;
 
-        public IstoricuriController(IRepositoryAngajat angajatData, IRepositoryIstoricAngajat istoricData, IRepositoryPost postData)
+        public EmployeesHistoryController(IRepositoryAngajat angajatData, IRepositoryIstoricAngajat istoricData, IRepositoryPost postData)
         {
             _angajatData = angajatData;
             _istoricData = istoricData;
@@ -26,7 +26,7 @@ namespace ManagementAngajati.Controllers
         }
 
         [HttpGet]
-        [Route("api/EmployeesHistories")]
+        [Route("api/EmployeesHistory")]
         public IActionResult GetAll()
         {
             var istoricuri = _istoricData.FindAll().Result;

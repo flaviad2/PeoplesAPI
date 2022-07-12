@@ -8,13 +8,13 @@ namespace ManagementAngajati.Controllers
 {
     [Route("")]
     [ApiController]
-    public class AngajatiController : ControllerBase
+    public class EmployeesController : ControllerBase
     {
         private IRepositoryAngajat _angajatData;
         private IRepositoryPost _postData; 
 
 
-        public AngajatiController(IRepositoryAngajat repositoryAngajat, IRepositoryPost repositoryPost)
+        public EmployeesController(IRepositoryAngajat repositoryAngajat, IRepositoryPost repositoryPost)
         {
             _angajatData = repositoryAngajat;
             _postData = repositoryPost;

@@ -108,8 +108,8 @@ namespace ManagementAngajati.Persistence.Repository
 
         public async Task<Angajat> Update(Angajat entity, long id)
         {
-           AngajatEntity oldAngajatEntity = _context.Angajati.Find(id);
-            // AngajatEntity oldAngajatEntity = _mapper.Map<AngajatEntity>(entity);
+             // AngajatEntity oldAngajatEntity = _context.Angajati.Find(id);
+             AngajatEntity oldAngajatEntity = _mapper.Map<AngajatEntity>(entity);
 
 
             if (oldAngajatEntity != null)

@@ -9,13 +9,13 @@ namespace ManagementAngajati.Controllers
 {
     [Route("")]
     [ApiController]
-    public class ConcediiController : ControllerBase
+    public class VacationsController : ControllerBase
     {
 
         private IRepositoryConcediu _concediuData;
         private IRepositoryAngajat _angajatData; 
 
-        public ConcediiController(IRepositoryConcediu concediuData, IRepositoryAngajat angajatData)
+        public VacationsController(IRepositoryConcediu concediuData, IRepositoryAngajat angajatData)
         {
             _concediuData = concediuData;
             _angajatData = angajatData;
@@ -54,19 +54,19 @@ namespace ManagementAngajati.Controllers
             Angajat angajatConcediu = await _angajatData.FindOne(concediuRequest.IdAngajat);
             if (angajatConcediu == null)
                 return BadRequest("Angajatul cu acest id nu exista!"); 
-            //try
-            //{   
+           try
+            {   
                 Concediu concediu = ConcediuPostRequestToConcediu(concediuRequest);
                 Concediu added = await _concediuData.Add(concediu);
                 return Ok(Converter.ConcediuToConcediuResponse(added));
-           // }
+            }
            
 
-          /*  catch (Exception e)
+            catch (Exception e)
             {
                 return BadRequest(e.Message);
             } 
-          */
+          
 
         }
 
@@ -75,7 +75,7 @@ namespace ManagementAngajati.Controllers
         [Route("api/Vacation/{id}")]
         public async Task<IActionResult> EditConcediuAsync(int id, ConcediuPOSTRequest concediuRequest)
         {
-         //   try { 
+            try { 
           
 
                 Concediu concediuModificat =  _concediuData.Update(ConcediuPostRequestToConcediu(concediuRequest), id).Result;
@@ -84,7 +84,7 @@ namespace ManagementAngajati.Controllers
                     return Ok(Converter.ConcediuToConcediuResponse(concediuModificat));
                 else
                   return NotFound($"Concediu cu id {id} nu a fost gasit! ");
-         /*  }
+           }
            catch (KeyNotFoundException e)
             {
 
@@ -96,7 +96,7 @@ namespace ManagementAngajati.Controllers
 
                  return BadRequest(e.Message);
              }
-         */
+         
         }
 
         [HttpDelete]
