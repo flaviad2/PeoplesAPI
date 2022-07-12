@@ -39,6 +39,7 @@ namespace ManagementAngajati.Persistence.Repository
             }
             ));
 
+
             _mapper3 = new Mapper(config3);
 
             _mapper = new Mapper(config);
@@ -84,6 +85,7 @@ namespace ManagementAngajati.Persistence.Repository
         public async Task<Angajat> Add(Angajat entity)
         {
             var added =  _context.Angajati.Add(_mapper.Map<AngajatEntity>(entity)).Entity;
+            var x = added;
             _context.SaveChanges();
             entity.ID = added.ID;
             return _mapper3.Map<Angajat>(entity);
@@ -106,13 +108,12 @@ namespace ManagementAngajati.Persistence.Repository
 
         public async Task<Angajat> Update(Angajat entity, long id)
         {
-            AngajatEntity oldAngajatEntity = _context.Angajati.Find(id);
-            Angajat oldAngajat = _mapper.Map<Angajat>(oldAngajatEntity);
-           
+           AngajatEntity oldAngajatEntity = _context.Angajati.Find(id);
+            // AngajatEntity oldAngajatEntity = _mapper.Map<AngajatEntity>(entity);
 
-            if(oldAngajat!=null)
+
+            if (oldAngajatEntity != null)
             {
-                oldAngajatEntity.ID = id;
                 oldAngajatEntity.Sex = entity.Sex;
                 oldAngajatEntity.Username = entity.Username;
                 oldAngajatEntity.Password = entity.Password;
@@ -120,9 +121,7 @@ namespace ManagementAngajati.Persistence.Repository
                 oldAngajatEntity.Prenume = entity.Prenume;
                 oldAngajatEntity.DataNasterii = entity.DataNasterii;
                 oldAngajatEntity.Experienta = entity.Experienta;
-                oldAngajatEntity.IdPosturi.Clear();
-               // foreach (PostEntity post in entity.IdPosturi)
-               //     oldAngajatEntity.IdPosturi.Add(post); 
+
 
                 _context.Angajati.Update(oldAngajatEntity);
                 _context.SaveChanges();
@@ -130,6 +129,7 @@ namespace ManagementAngajati.Persistence.Repository
                 entity.ID = id;
                 return entity;
             }
+            
             return null;
         }
 

@@ -9,7 +9,7 @@ using ManagementAngajati.Persistence.Entities;
 
 namespace ManagementAngajati.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("")]
     [ApiController]
     public class IstoricuriController : ControllerBase
     {
@@ -26,47 +26,49 @@ namespace ManagementAngajati.Controllers
         }
 
         [HttpGet]
-        [Route("api/[controller]/idIstoric/{id}")]
-        public IActionResult GetIstoric(long id)
+        [Route("api/EmployeesHistories")]
+        public IActionResult GetAll()
         {
-            var istoric = _istoricData.FindOne(id).Result; 
+            var istoricuri = _istoricData.FindAll().Result;
+            if (istoricuri != null)
+            {
+                return Ok(Converter.IstoricListToIstoricListResponse(istoricuri));
+
+            }
+            return NoContent();
+        }
+
+        [HttpGet]
+        [Route("api/EmployeeHistory/{idEmployeeHistory}")]
+        public IActionResult GetIstoric(long idEmployeeHistory)
+        {
+            var istoric = _istoricData.FindOne(idEmployeeHistory).Result; 
             if(istoric != null)
             {
                 return Ok(Converter.IstoricToIstoricResponse(istoric));
             }
-            return NotFound($"Istoricul cu id {id} nu a fost gasit! "); 
+            return NotFound($"Istoricul cu id {idEmployeeHistory} nu a fost gasit! "); 
         }
 
 
 
         [HttpGet]
-        [Route("api/[controller]/idAngajat/{id}")]
-        public IActionResult GetIstoricByIdAngajat(long id)
+        [Route("api/EmployeeHistory/{idEmployee}")]
+        public IActionResult GetIstoricByIdAngajat(long idEmployee)
         {
-            var istoric = _istoricData.FindOneByIdAngajat(id).Result;
+            var istoric = _istoricData.FindOneByIdAngajat(idEmployee).Result;
             if (istoric != null)
             {
                 return Ok(Converter.IstoricToIstoricResponse(istoric));
             }
-            return NotFound($"Istoricul pentru angajatul cu id {id} nu a fost gasit! ");
+            return NotFound($"Istoricul pentru angajatul cu id {idEmployee} nu a fost gasit! ");
         }
 
-        [HttpGet]
-        [Route("api/[controller]")]
-        public IActionResult GetAll()
-        {
-            var istoricuri = _istoricData.FindAll().Result; 
-            if(istoricuri!= null)
-            {
-                return Ok(Converter.IstoricListToIstoricListResponse(istoricuri)); 
-
-            }
-            return NoContent(); 
-        }
+    
 
 
         [HttpPut]
-        [Route("api/[controller]/{id}")]
+        [Route("api/EmployeeHistory/{id}")]
         public IActionResult EditIstoric(int id, IstoricAngajatPOSTRequest istoricAngajatRequest)
         {
             try
@@ -87,7 +89,7 @@ namespace ManagementAngajati.Controllers
         }
 
         [HttpPost]
-        [Route("api/[controller]")]
+        [Route("api/EmployeeHistory")]
         public IActionResult PostIstoric(IstoricAngajatPOSTRequest istoricAngajatRequest)
         {
             try
@@ -105,7 +107,7 @@ namespace ManagementAngajati.Controllers
 
 
         [HttpDelete]
-        [Route("api/[controller]/{id}")]
+        [Route("api/EmployeeHistory/{id}")]
         public IActionResult DeleteIstoric(int id)
         {
             try

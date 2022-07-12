@@ -3,6 +3,7 @@ using AutoMapper;
 using ManagementAngajati.Models;
 using ManagementAngajati.Persistence.DbUtils;
 using ManagementAngajati.Persistence.Entities;
+using ManagementAngajati.Utils;
 
 namespace ManagementAngajati.Persistence.Repository
 {
@@ -53,12 +54,12 @@ namespace ManagementAngajati.Persistence.Repository
 
         public async Task<Post> Add(Post entity)
         {
+
             PostEntity postEntity = _mapper2.Map<PostEntity>(entity);
             var added = _context.Posturi.Add(postEntity).Entity;
             _context.SaveChanges();
             entity.ID = added.ID;
             return entity;
-           
         }
 
         public async Task<Post> Delete(long id)
@@ -70,7 +71,8 @@ namespace ManagementAngajati.Persistence.Repository
                 _context.Posturi.Remove(deSters);
                 _context.SaveChanges();
 
-                return _mapper.Map<Post>(deSters); 
+
+                return new Post(deSters.ID, deSters.Functie, deSters.DetaliuFunctie, deSters.Departament, new List<Angajat>());
             }
             return null; 
         }
@@ -104,7 +106,7 @@ namespace ManagementAngajati.Persistence.Repository
             foreach (long id in ids)
             {
                 var dbPost = _context.Posturi.Where(a => a.ID == id).SingleOrDefault();
-                res.Add(_mapper.Map<Post>(dbPost));
+                res.Add(new Post(dbPost.ID, dbPost.Functie, dbPost.DetaliuFunctie, dbPost.Departament, new List<Angajat>()));
             }
 
             return res;
@@ -118,7 +120,7 @@ namespace ManagementAngajati.Persistence.Repository
             {
                 var dbAngajatiPost = _context.Posturi.Where(p => p.ID == id).SelectMany(a => a.Angajati).ToList();
                 dbPost.Angajati = dbAngajatiPost;
-                return _mapper.Map<Post>(dbPost);
+                return new Post(dbPost.ID, dbPost.Functie, dbPost.DetaliuFunctie, dbPost.Departament, new List<Angajat>());
 
             }
             return null; 
@@ -128,14 +130,14 @@ namespace ManagementAngajati.Persistence.Repository
         public async Task<Post> Update(Post entity, long id)
         {
             PostEntity oldPostEntity = _context.Posturi.Find(id);
-           
 
-            if(oldPostEntity != null)
+
+            if (oldPostEntity != null)
             {
                 oldPostEntity.DetaliuFunctie = entity.DetaliuFunctie;
                 oldPostEntity.Angajati.Clear();
-               // foreach (AngajatEntity angajat in entity.Angajati)
-               //     oldPostEntity.Angajati.Add(angajat);
+                // foreach (AngajatEntity angajat in entity.Angajati)
+                //     oldPostEntity.Angajati.Add(angajat);
                 oldPostEntity.Functie = entity.Functie;
                 oldPostEntity.Departament = entity.Departament;
                 _context.Posturi.Update(oldPostEntity);

@@ -27,8 +27,10 @@ namespace ManagementAngajati.Persistence.Repository
         
         public async Task<IstoricAngajat> Add(IstoricAngajat entity)
         {
-            IstoricAngajatEntity istoric = new IstoricAngajatEntity(entity.ID, _context.Angajati.Find(entity.IdAngajat), _context.Posturi.Find(entity.IdPost), entity.DataAngajare, entity.Salariu, entity.DataReziliere);
+
+            IstoricAngajatEntity istoric = new IstoricAngajatEntity(entity.ID, _context.Angajati.Find(entity.IdAngajat.ID), _context.Posturi.Find(entity.IdPost.ID), entity.DataAngajare, entity.Salariu, entity.DataReziliere);
             var added = _context.IstoricuriAngajati.Add(istoric).Entity;
+            
             _context.SaveChanges();
             entity.ID = added.ID;
             return entity;
@@ -123,19 +125,21 @@ namespace ManagementAngajati.Persistence.Repository
             angajat.ID = dbIstoric.Angajat.ID;
             PostEntity postE = _context.Posturi.Find(entity.IdPost.ID);
             Post post = new Post(postE.ID, postE.Functie, postE.DetaliuFunctie, postE.Departament, new List<Angajat>()); 
-            IstoricAngajat oldIstoric =  new IstoricAngajat(dbIstoric.ID, angajat, post, dbIstoric.DataAngajare, dbIstoric.Salariu, dbIstoric.DataReziliere);
 
-            if(oldIstoric != null)
+            if(dbIstoric != null)
             {
-                oldIstoric.ID = id;
-                oldIstoric.Salariu = entity.Salariu;
-                oldIstoric.IdAngajat = entity.IdAngajat;
-                oldIstoric.DataReziliere = entity.DataReziliere;
-                oldIstoric.DataAngajare = entity.DataAngajare;
-               
-                _context.Update(oldIstoric);
+                dbIstoric.ID = id;
+
+                dbIstoric.Salariu = entity.Salariu;
+                dbIstoric.DataReziliere = entity.DataReziliere;
+                dbIstoric.DataAngajare = entity.DataAngajare;
+                
+                _context.Update(dbIstoric);
                 _context.SaveChanges();
-                return oldIstoric;
+
+                entity.ID = id;
+                return entity;
+               
             }
 
             return null; 

@@ -21,7 +21,20 @@ namespace ManagementAngajati.Controllers
         }
 
         [HttpGet]
-        [Route("api/[controller]/{id}")]
+        [Route("api/Positions")]
+        public IActionResult GetAll()
+        {
+            var posturi = _postData.FindAll().Result;
+            if (posturi != null)
+            {
+                return Ok(Converter.PostListToPostResponseList(posturi));
+
+            }
+            return NoContent();
+        }
+
+        [HttpGet]
+        [Route("api/Position/{id}")]
         public IActionResult GetPost(long id)
         {
             var post = _postData.FindOne(id).Result; 
@@ -32,22 +45,11 @@ namespace ManagementAngajati.Controllers
             return NotFound($"Postul cu id: {id} nu a fost gasit");
         }
 
-        [HttpGet]
-        [Route("api/[controller]")]
-        public IActionResult GetAll()
-        {
-            var posturi = _postData.FindAll().Result;
-            if(posturi!=null)
-            {
-                return Ok(Converter.PostListToPostResponseList(posturi)); 
-
-            }
-            return NoContent();
-        }
+        
 
 
         [HttpPost]
-        [Route("api/[controller]")]
+        [Route("api/Position")]
         public IActionResult PostPost(PostPOSTRequest postRequest)
         {
             try
@@ -78,7 +80,7 @@ namespace ManagementAngajati.Controllers
         }
 
         [HttpPut]
-        [Route("api/[controller]/{id}")]
+        [Route("api/Position/{id}")]
         public async Task<IActionResult> EditPostAsync(int id, PostPOSTRequest postRequest)
         {
             Post post = PostRequestToPost(postRequest);
@@ -118,7 +120,7 @@ namespace ManagementAngajati.Controllers
 
 
         [HttpDelete]
-        [Route("api/[controller]/{id}")]
+        [Route("api/Position/{id}")]
         public IActionResult DeletePost(int id)
         {
             var post = _postData.FindOne(id).Result; 

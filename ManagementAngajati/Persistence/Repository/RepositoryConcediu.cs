@@ -22,34 +22,6 @@ namespace ManagementAngajati.Persistence.Repository
         {
             _context = context;
 
-            //din ConcediuEntity in Concediu
-          
-
-            //                options.MapFrom(source => source.IdPosturi.Select(id => new Post { ID=id.ID, Departament=id.Departament, DetaliuFunctie=id.DetaliuFunctie, Functie=id.Functie}).ToList());
-
-
-
-
-
-            /* var config2 = new MapperConfiguration(cfg => cfg.CreateMap<Concediu, ConcediuEntity>().ForMember(destination => destination.IdAngajat.ID, options =>
-                  {
-                      options.MapFrom(source => source.IdAngajat);
-                  }));
-
-
-                 CreateMap<Owner, Car>().ForMember(dest => dest.OwnerData,
-              input => input.MapFrom(i => new Owner { Name = i.Name }));
-
-                 */
-
-            /*  var config3 = new MapperConfiguration(cfg => cfg.CreateMap<Concediu, ConcediuEntity>().ForMember(destination => destination.IdAngajat, options =>
-              {
-                  options.MapFrom(i => i.IdAngajat);
-              }));
-
-              var config2 = new MapperConfiguration(cfg => cfg.CreateMap<Concediu, ConcediuEntity>().ForPath(a => a.IdAngajat, o => o.MapFrom(p => p.IdAngajat)));
-            */
-
 
             var config2 = new MapperConfiguration(cfg => cfg.CreateMap<Concediu, ConcediuEntity>().ForMember(destination => destination.IdAngajat, options =>
             {
@@ -72,7 +44,7 @@ namespace ManagementAngajati.Persistence.Repository
 
         public async Task<Concediu> Add(Concediu entity)
         {
-            ConcediuEntity concediu = new ConcediuEntity(entity.ID, _context.Angajati.Find(entity.IdAngajat), entity.DataIncepere, entity.DataTerminare);
+            ConcediuEntity concediu = new ConcediuEntity(entity.ID, _context.Angajati.Find(entity.IdAngajat.ID), entity.DataIncepere, entity.DataTerminare);
             var added = _context.Concedii.Add(concediu).Entity;
             _context.SaveChanges();
             entity.ID = added.ID; 
@@ -108,15 +80,21 @@ namespace ManagementAngajati.Persistence.Repository
             {
                 var dbConcediuAngajat = _context.Concedii.Where(a => a.ID == dbConcedii[i].ID).Select(c => c.IdAngajat).SingleOrDefault() ;
                 dbConcedii[i].IdAngajat = dbConcediuAngajat;
+                var dbPosturiAngajat = _context.Angajati.Where(a => a.ID == dbConcedii[i].IdAngajat.ID).SelectMany(c => c.IdPosturi).ToList();
+                dbConcedii[i].IdAngajat.IdPosturi = dbPosturiAngajat;
             }
 
             List<Concediu> listRes = new List<Concediu>();
             foreach (ConcediuEntity aE in dbConcedii)
             {
              
-
                 AngajatEntity angajatEntity = aE.IdAngajat;
-                Angajat angajat = new Angajat(angajatEntity.ID, angajatEntity.Nume, angajatEntity.Prenume, angajatEntity.Username, angajatEntity.Password, angajatEntity.DataNasterii, angajatEntity.Sex, angajatEntity.Experienta, new List<Post>());
+                List<Post> listPosts = new List<Post>();
+
+                foreach (PostEntity pE in angajatEntity.IdPosturi)
+                    listPosts.Add(new Post(pE.ID, pE.Functie, pE.DetaliuFunctie, pE.Departament, new List<Angajat>()));
+                Angajat angajat = new Angajat(angajatEntity.ID, angajatEntity.Nume, angajatEntity.Prenume, angajatEntity.Username, angajatEntity.Password, angajatEntity.DataNasterii, angajatEntity.Sex, angajatEntity.Experienta, listPosts);
+                angajat.ID = aE.IdAngajat.ID;
                 listRes.Add(new Concediu(aE.ID, angajat,aE.DataIncepere, aE.DataTerminare));
 
             }
@@ -133,8 +111,20 @@ namespace ManagementAngajati.Persistence.Repository
             {
                 var dbAngajat = _context.Concedii.Where(c => c.ID == id).Select(c => c.IdAngajat).SingleOrDefault();
                 dbConcediu.IdAngajat = dbAngajat;
+                var dbPosturiAngajat = _context.Angajati.Where(a => a.ID == dbAngajat.ID).SelectMany(c => c.IdPosturi).ToList();
+                dbConcediu.IdAngajat.IdPosturi = dbPosturiAngajat;
                 AngajatEntity angajatEntity = dbConcediu.IdAngajat;
-                Angajat angajat = new Angajat(angajatEntity.ID, angajatEntity.Nume, angajatEntity.Prenume, angajatEntity.Username, angajatEntity.Password, angajatEntity.DataNasterii, angajatEntity.Sex, angajatEntity.Experienta, new List<Post>());
+                var dbPosturiA = _context.Angajati.Where(a => a.ID == angajatEntity.ID).SelectMany(c => c.IdPosturi).ToList();
+                angajatEntity.IdPosturi = dbPosturiA;
+
+                List<Post> posturiAngajat = new List<Post>(); 
+                foreach(PostEntity pE in angajatEntity.IdPosturi)
+                {
+                    posturiAngajat.Add(new Post(pE.ID, pE.Functie, pE.DetaliuFunctie, pE.Departament, new List<Angajat>()));
+                }
+                Angajat angajat = new Angajat(angajatEntity.ID, angajatEntity.Nume, angajatEntity.Prenume, angajatEntity.Username, angajatEntity.Password, angajatEntity.DataNasterii, angajatEntity.Sex, angajatEntity.Experienta,posturiAngajat);
+                angajat.ID = dbAngajat.ID;
+                
                 return new Concediu(dbConcediu.ID, angajat, dbConcediu.DataIncepere, dbConcediu.DataTerminare);
 
                // return _mapper.Map<Concediu>(dbConcediu); 
@@ -148,7 +138,7 @@ namespace ManagementAngajati.Persistence.Repository
         public async Task<Concediu> Update(Concediu entity, long id)
         {
 
-            ConcediuEntity oldConcediu = await _context.Concedii.FindAsync(id);
+            ConcediuEntity oldConcediu = _context.Concedii.Find(id);
 
 
             if (oldConcediu != null)
@@ -157,13 +147,13 @@ namespace ManagementAngajati.Persistence.Repository
                 oldConcediu.DataIncepere = entity.DataIncepere;
                 oldConcediu.DataTerminare = entity.DataTerminare;
                 //iau angajatul pt acest concediu 
-                AngajatEntity angajatEntity = oldConcediu.IdAngajat;
-                Angajat angajat = new Angajat(angajatEntity.ID, angajatEntity.Nume, angajatEntity.Prenume, angajatEntity.Username, angajatEntity.Password, angajatEntity.DataNasterii, angajatEntity.Sex, angajatEntity.Experienta, new List<Post>());
+              
                 _context.Concedii.Update(oldConcediu);
+
                 _context.SaveChanges();
 
-
-                return new Concediu(oldConcediu.ID,angajat, oldConcediu.DataIncepere, oldConcediu.DataTerminare); 
+                entity.ID = id;
+                return entity;
 
             }
 

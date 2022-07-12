@@ -7,7 +7,7 @@ using ManagementAngajati.Persistence.Entities;
 
 namespace ManagementAngajati.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("")]
     [ApiController]
     public class ConcediiController : ControllerBase
     {
@@ -22,7 +22,19 @@ namespace ManagementAngajati.Controllers
         }
 
         [HttpGet]
-        [Route("api/[controller]/concedii/{id}")]
+        [Route("api/Vacations")]
+        public IActionResult GetAll()
+        {
+            var concedii = _concediuData.FindAll().Result;
+            if (concedii != null)
+            {
+                return Ok(Converter.ConcediuListToConcediuResponseList(concedii));
+            }
+            return NoContent();
+        }
+
+        [HttpGet]
+        [Route("api/Vacation/{id}")]
         public async Task<IActionResult> GetConcediuAsync(long id)
         {
             var concediu = await _concediuData.FindOne(id);
@@ -33,56 +45,46 @@ namespace ManagementAngajati.Controllers
             return NotFound($"Concediul cu id: {id} nu a fost gasit!"); 
         }
 
-        [HttpGet]
-        [Route("api/[controller]")]
-        public IActionResult GetAll()
-        {
-            var concedii = _concediuData.FindAll().Result;
-            if(concedii != null)
-            {
-                return Ok(Converter.ConcediuListToConcediuResponseList(concedii)); 
-            }
-            return NoContent();
-        }
+      
 
         [HttpPost]
-        [Route("api/concedii/[controller]")]
+        [Route("api/Vacations")]
         public async Task<IActionResult> PostConcecdiuAsync(ConcediuPOSTRequest concediuRequest) 
         {
             Angajat angajatConcediu = await _angajatData.FindOne(concediuRequest.IdAngajat);
             if (angajatConcediu == null)
                 return BadRequest("Angajatul cu acest id nu exista!"); 
-            try
-            {   
+            //try
+            //{   
                 Concediu concediu = ConcediuPostRequestToConcediu(concediuRequest);
                 Concediu added = await _concediuData.Add(concediu);
                 return Ok(Converter.ConcediuToConcediuResponse(added));
-            }
+           // }
            
 
-            catch (Exception e)
+          /*  catch (Exception e)
             {
                 return BadRequest(e.Message);
             } 
-
+          */
 
         }
 
 
         [HttpPut]
-        [Route("api/[controller]/{id}")]
+        [Route("api/Vacation/{id}")]
         public async Task<IActionResult> EditConcediuAsync(int id, ConcediuPOSTRequest concediuRequest)
         {
-            try { 
+         //   try { 
           
 
-                Concediu concediuModificat = await _concediuData.Update(ConcediuPostRequestToConcediu(concediuRequest), id);
+                Concediu concediuModificat =  _concediuData.Update(ConcediuPostRequestToConcediu(concediuRequest), id).Result;
 
                 if (concediuModificat != null)
                     return Ok(Converter.ConcediuToConcediuResponse(concediuModificat));
                 else
                   return NotFound($"Concediu cu id {id} nu a fost gasit! ");
-           }
+         /*  }
            catch (KeyNotFoundException e)
             {
 
@@ -94,11 +96,11 @@ namespace ManagementAngajati.Controllers
 
                  return BadRequest(e.Message);
              }
-
+         */
         }
 
         [HttpDelete]
-        [Route("api/[controller]/{id}")]
+        [Route("api/Vacation/{id}")]
         public IActionResult DeleteConcediu(int id)
         {
             try

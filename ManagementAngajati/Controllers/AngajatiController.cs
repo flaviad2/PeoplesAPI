@@ -20,36 +20,8 @@ namespace ManagementAngajati.Controllers
             _postData = repositoryPost;
         }
 
-
         [HttpGet]
-        [Route("api/[controller]/{id}")]
-        public async Task<IActionResult> GetAngajatAsync(long id)
-        {
-            var angajat = await _angajatData.FindOne(id);
-            if (angajat != null)
-            {
-                return Ok(Converter.AngajatToAngajatResponse(angajat));
-            }
-            return NotFound($"Angajatul cu id: {id} nu a fost gasit");
-
-        }
-
-        [HttpGet]
-        [Route("api/[controller]/username/{username}")]
-        public IActionResult GetAngajatLogIn(String username)
-        {
-            var angajat = _angajatData.GetAngajatByUsername(username).Result;
-            if (angajat != null)
-            {
-                return Ok(Converter.AngajatToAngajatResponse(angajat));
-            }
-            return NotFound($"Angajatul cu username: {username} nu a fost gasit");
-
-        }
-
-
-        [HttpGet]
-        [Route("api/[controller]")]
+        [Route("api/Employees")]
         public IActionResult GetAll()
         {
             var angajati = _angajatData.FindAll().Result;
@@ -62,8 +34,26 @@ namespace ManagementAngajati.Controllers
         }
 
 
+        [HttpGet]
+        [Route("api/Employee/{id}")]
+        public async Task<IActionResult> GetAngajatAsync(long id)
+        {
+            var angajat = await _angajatData.FindOne(id);
+            if (angajat != null)
+            {
+                return Ok(Converter.AngajatToAngajatResponse(angajat));
+            }
+            return NotFound($"Angajatul cu id: {id} nu a fost gasit");
+
+        }
+
+      
+
+
+      
+
         [HttpPost]
-        [Route("api/[controller]")]
+        [Route("api/Employees")]
         public async Task<IActionResult> PostAngajatAsync(AngajatPOSTRequest angajatRequest)
         {
              try
@@ -98,13 +88,13 @@ namespace ManagementAngajati.Controllers
         }
 
         [HttpPut]
-        [Route("api/[controller]/{id}")]
+        [Route("api/Employee/{id}")]
         public async Task<IActionResult> EditAngajatAsync(int id, AngajatPOSTRequest angajatRequest)
         {
             try
             {
                 Angajat angajat = AngajatPostRequestToAngajat(angajatRequest);
-                Angajat angajatVechi = await _angajatData.FindOne(id);
+               
                 Angajat angajatModificat = _angajatData.Update(angajat, id).Result;
 
 
@@ -114,7 +104,7 @@ namespace ManagementAngajati.Controllers
                     AngajatResponse angajatResponse = Converter.AngajatToAngajatResponse(angajat);
 
                     //daca s-a schimbat lista de posturi pt acest angajat, trebuie facute modificari si in repo-ul de posturi
-                    if (!Helper.IsEqualListOfPosts(angajat.IdPosturi, angajatVechi.IdPosturi))
+                    if (!Helper.IsEqualListOfPosts(angajat.IdPosturi, angajatModificat.IdPosturi))
                     {
 
                         List<Post> postsForUpdate = _postData.FindAll().Result;
@@ -155,7 +145,7 @@ namespace ManagementAngajati.Controllers
 
 
         [HttpDelete]
-        [Route("api/[controller]/{id}")]
+        [Route("api/Employee/{id}")]
         public IActionResult DeleteAngajat(int id)
         {
             try
