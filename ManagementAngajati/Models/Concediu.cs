@@ -7,7 +7,7 @@ namespace ManagementAngajati.Models
     {
        
         [JsonProperty("Angajat")]
-        public long IdAngajat { get; set; }
+        public Angajat IdAngajat { get; set; }
 
         [JsonProperty("DataIncepere")]
         public DateTime DataIncepere { get; set; }
@@ -16,7 +16,7 @@ namespace ManagementAngajati.Models
         [JsonProperty("DataTerminare")]
         public DateTime DataTerminare { get; set; }
 
-        public Concediu(long id, long idAngajat, DateTime dataIncepere, DateTime dataTerminare)
+        public Concediu(long id, Angajat idAngajat, DateTime dataIncepere, DateTime dataTerminare)
         {
             ID = id;
             IdAngajat = idAngajat;

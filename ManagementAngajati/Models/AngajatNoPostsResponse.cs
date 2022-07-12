@@ -2,8 +2,7 @@
 
 namespace ManagementAngajati.Models
 {
-    //nu are ID, iar lista de Posturi e lista de IDs
-    public class AngajatRequest
+    public class AngajatNoPostsResponse : Entity<long>
     {
 
         [JsonProperty("Nume")]
@@ -28,7 +27,20 @@ namespace ManagementAngajati.Models
         public int Experienta { get; set; }
 
         [JsonProperty("IdPosturi")]
+        private List<PostResponse> Posturi { get; set; } = new List<PostResponse>();
 
-        public  List<long> Posturi { get; set; } = new List<long>();
+
+        public AngajatNoPostsResponse(long id, string nume, string prenume, string username, string password, DateTime dataNasterii, string sex, int experienta, List<PostResponse> posturi)
+        {
+            ID = id;
+            Nume = nume;
+            Prenume = prenume;
+            Username = username;
+            Password = password;
+            DataNasterii = dataNasterii;
+            Sex = sex;
+            Experienta = experienta;
+            Posturi = posturi;
+        }
     }
 }

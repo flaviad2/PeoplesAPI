@@ -30,10 +30,11 @@ namespace ManagementAngajati.Utils
             //transformam lista de obiecte in lista de id-uri 
             if (angajat != null)
             {
-                List<long> posturi = new List<long>();
+                List<PostResponse> posturi = new List<PostResponse>();
                 for (int i = 0; i < angajat.IdPosturi.Count; i++)
                 {
-                    posturi.Add(angajat.IdPosturi[i].ID);
+                    Post p = angajat.IdPosturi[i];
+                    posturi.Add(new PostResponse(p.ID, p.Functie, p.DetaliuFunctie, p.Departament));
                 }
                 return new AngajatResponse(angajat.ID, angajat.Nume, angajat.Prenume, angajat.Username, angajat.Password, angajat.DataNasterii, angajat.Sex, angajat.Experienta, posturi);
 
@@ -51,18 +52,26 @@ namespace ManagementAngajati.Utils
                 angajati.Add(post.IdAngajati[i].ID); 
 
             }
-            return new PostResponse(post.ID, post.Functie, post.DetaliuFunctie, post.Departament, angajati);
+            return new PostResponse(post.ID, post.Functie, post.DetaliuFunctie, post.Departament);
         }
 
         public static ConcediuResponse ConcediuToConcediuResponse(Concediu concediu)
         {
-            return new ConcediuResponse(concediu.ID, concediu.IdAngajat, concediu.DataIncepere, concediu.DataTerminare); 
+
+            return new ConcediuResponse(concediu.ID, AngajatToAngajatResponse(concediu.IdAngajat), concediu.DataIncepere, concediu.DataTerminare); 
 
         }
 
         public static IstoricAngajatResponse IstoricToIstoricResponse(IstoricAngajat istoric)
         {
-            return new IstoricAngajatResponse(istoric.ID, istoric.IdAngajat, istoric.IdPost, istoric.DataAngajare, istoric.Salariu, istoric.DataReziliere); 
+            Angajat angajat = istoric.IdAngajat;
+            AngajatNoPostsResponse angajatResponse = new AngajatNoPostsResponse(angajat.ID, angajat.Nume, angajat.Prenume, angajat.Username, angajat.Password, angajat.DataNasterii, angajat.Sex, angajat.Experienta, new List<PostResponse>());
+
+            Post postIstoric = istoric.IdPost;
+            PostResponse postResponse = new PostResponse(postIstoric.ID, postIstoric.Functie, postIstoric.DetaliuFunctie, postIstoric.Departament);
+
+
+            return new IstoricAngajatResponse(istoric.ID, angajatResponse, postResponse, istoric.DataAngajare, istoric.Salariu, istoric.DataReziliere); 
 
         }
 
@@ -73,10 +82,11 @@ namespace ManagementAngajati.Utils
             List<AngajatResponse> listAnagajatiResponse = new List<AngajatResponse>();
             foreach(Angajat angajat in angajati)
             {
-                List<long> posturi = new List<long>(); //posturile acestui angajat 
+                List<PostResponse> posturi = new List<PostResponse>(); //posturile acestui angajat 
                 for (int i = 0; i < angajat.IdPosturi.Count; i++)
                 {
-                    posturi.Add(angajat.IdPosturi[i].ID);
+                    PostResponse postResponse = new PostResponse(angajat.IdPosturi[i].ID, angajat.IdPosturi[i].Functie, angajat.IdPosturi[i].DetaliuFunctie, angajat.IdPosturi[i].Departament);
+                    posturi.Add(postResponse);
                 }
                 listAnagajatiResponse.Add(new AngajatResponse(angajat.ID, angajat.Nume, angajat.Prenume, angajat.Username, angajat.Password, angajat.DataNasterii, angajat.Sex, angajat.Experienta, posturi));
             }
@@ -94,7 +104,7 @@ namespace ManagementAngajati.Utils
                 {
                     angajati.Add(post.IdAngajati[i].ID); 
                 }
-                listPostResponse.Add(new PostResponse(post.ID, post.Functie, post.DetaliuFunctie, post.Departament, angajati)); 
+                listPostResponse.Add(new PostResponse(post.ID, post.Functie, post.DetaliuFunctie, post.Departament)); 
 
             }
             return listPostResponse;
@@ -106,7 +116,8 @@ namespace ManagementAngajati.Utils
             List<ConcediuResponse> listConcediiResponse = new List<ConcediuResponse>(); 
             foreach(Concediu concediu in concedii)
             {
-                listConcediiResponse.Add(new ConcediuResponse(concediu.ID, concediu.IdAngajat, concediu.DataIncepere, concediu.DataTerminare));
+                
+                listConcediiResponse.Add(new ConcediuResponse(concediu.ID, AngajatToAngajatResponse(concediu.IdAngajat), concediu.DataIncepere, concediu.DataTerminare));
             }
             return listConcediiResponse;
         }
@@ -116,7 +127,22 @@ namespace ManagementAngajati.Utils
             List<IstoricAngajatResponse> listIstoricResponse = new List<IstoricAngajatResponse>(); 
             foreach(IstoricAngajat istoric in istoricuri)
             {
-                listIstoricResponse.Add(new IstoricAngajatResponse(istoric.ID, istoric.IdAngajat, istoric.IdPost, istoric.DataAngajare, istoric.Salariu, istoric.DataReziliere)); 
+                Angajat angajat = istoric.IdAngajat;
+                AngajatNoPostsResponse angajatResponse = new AngajatNoPostsResponse(angajat.ID, angajat.Nume, angajat.Prenume, angajat.Username, angajat.Password, angajat.DataNasterii, angajat.Sex, angajat.Experienta, new List<PostResponse>());
+
+                List<PostResponse> listPostResponse = new List<PostResponse>();
+                foreach (Post post in angajat.IdPosturi)
+                {
+
+                    listPostResponse.Add(new PostResponse(post.ID, post.Functie, post.DetaliuFunctie, post.Departament));
+
+                }
+
+                Post postIstoric = istoric.IdPost;
+                PostResponse postResponse = new PostResponse(postIstoric.ID, postIstoric.Functie, postIstoric.DetaliuFunctie, postIstoric.Departament);
+                listIstoricResponse.Add(new IstoricAngajatResponse(istoric.ID, angajatResponse, postResponse, istoric.DataAngajare, istoric.Salariu, istoric.DataReziliere));
+
+
 
             }
             return listIstoricResponse; 

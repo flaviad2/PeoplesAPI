@@ -131,7 +131,7 @@ namespace ManagementAngajati.Controllers
             Angajat aID = _angajatData.FindOne(istoricAngajatRequest.IdAngajat).Result;
             Post pID = _postData.FindOne(istoricAngajatRequest.Post).Result;
 
-            return new IstoricAngajat(istoricAngajatRequest.ID,aID.ID, pID.ID, istoricAngajatRequest.DataAngajare, istoricAngajatRequest.Salariu, istoricAngajatRequest.DataReziliere); 
+            return new IstoricAngajat(istoricAngajatRequest.ID,aID, pID, istoricAngajatRequest.DataAngajare, istoricAngajatRequest.Salariu, istoricAngajatRequest.DataReziliere); 
         }
     }
 }

@@ -15,6 +15,7 @@ namespace ManagementAngajati.Persistence.Repository
 
         private readonly Mapper _mapper;
         //mapeaza de la Entity la Object 
+        private readonly Mapper _mapper3;
 
 
         private readonly Mapper _mapper2;
@@ -25,12 +26,23 @@ namespace ManagementAngajati.Persistence.Repository
             _context = context;
 
     
-            var config = new MapperConfiguration(cfg => cfg.CreateMap<AngajatEntity, Angajat>().ForMember(destination => destination.IdPosturi, options =>
+            var config3 = new MapperConfiguration(cfg => cfg.CreateMap<AngajatEntity, Angajat>().ForMember(destination => destination.IdPosturi, options =>
             {
-                options.MapFrom(source => source.IdPosturi.Select(post => post.ID).ToList());
+                options.MapFrom(source => source.IdPosturi.Select(id => new Post { ID=id.ID, Departament=id.Departament, DetaliuFunctie=id.DetaliuFunctie, Functie=id.Functie}).ToList());
             }));
 
+
+            var config = new MapperConfiguration(cfg => cfg.CreateMap<Angajat, AngajatEntity>().ForMember(destination => destination.IdPosturi, options =>
+            {
+                options.MapFrom(source => source.IdPosturi.Select(id => _context.Posturi.Find(id.ID)).ToList()
+            ) ; 
+            }
+            ));
+
+            _mapper3 = new Mapper(config3);
+
             _mapper = new Mapper(config);
+
 
 
 
@@ -71,10 +83,10 @@ namespace ManagementAngajati.Persistence.Repository
 
         public async Task<Angajat> Add(Angajat entity)
         {
-            var added =  _context.Angajati.Add(_mapper2.Map<AngajatEntity>(entity)).Entity;
+            var added =  _context.Angajati.Add(_mapper.Map<AngajatEntity>(entity)).Entity;
             _context.SaveChanges();
             entity.ID = added.ID;
-            return _mapper.Map<Angajat>(entity);
+            return _mapper3.Map<Angajat>(entity);
             
         }
 
@@ -129,7 +141,7 @@ namespace ManagementAngajati.Persistence.Repository
             if (dbPosturiAngajat != null && dbAngajat!=null)
             {
                 dbAngajat.IdPosturi = dbPosturiAngajat;
-                return _mapper.Map<Angajat>(dbAngajat);
+                return _mapper3.Map<Angajat>(dbAngajat);
 
             }
             return null;
@@ -143,13 +155,15 @@ namespace ManagementAngajati.Persistence.Repository
             var dbAngajati = _context.Angajati.ToList();
             for(int i=0; i<dbAngajati.Count; i++)
             {
-                var dbPosturiAngajat = _context.Angajati.Where(a => a.ID == dbAngajati[i].ID).SelectMany(c => c.IdPosturi).ToList();
+               
+                var dbPosturiAngajat = _context.Angajati.Where(p => p.ID == dbAngajati[i].ID).SelectMany(c => c.IdPosturi).ToList();
+
                 dbAngajati[i].IdPosturi = dbPosturiAngajat;
             }
             List<Angajat> listRes = new List<Angajat>();
             foreach(AngajatEntity aE in dbAngajati)
             {
-                listRes.Add(_mapper.Map<Angajat>(aE));
+                listRes.Add(_mapper3.Map<Angajat>(aE));
             }
             return listRes;
 

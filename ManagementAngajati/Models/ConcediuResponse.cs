@@ -8,8 +8,7 @@ namespace ManagementAngajati.Models
     {
        
 
-        [JsonProperty("IdAngajat")]
-        public long Angajat { get; set; }  
+       
 
         [JsonProperty("DataIncepere")]
         public DateTime DataIncepere { get; set; }
@@ -18,7 +17,10 @@ namespace ManagementAngajati.Models
         [JsonProperty("DataTerminare")]
         public DateTime DataTerminare { get; set; }
 
-        public ConcediuResponse(long id, long angajat, DateTime dataIncepere, DateTime dataTerminare)
+        [JsonProperty("IdAngajat")]
+        public AngajatResponse Angajat { get; set; }
+
+        public ConcediuResponse(long id, AngajatResponse angajat, DateTime dataIncepere, DateTime dataTerminare)
         {
             ID = id;
             Angajat = angajat;

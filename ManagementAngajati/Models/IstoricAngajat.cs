@@ -6,10 +6,10 @@ namespace ManagementAngajati.Models
     public class IstoricAngajat : Entity<long>
     {
         [JsonProperty("Angajat")]
-        public long IdAngajat { get; set; }
+        public Angajat IdAngajat { get; set; }
 
         [JsonProperty("Post")]
-        public long IdPost { get; set; }
+        public Post IdPost { get; set; }
 
         [JsonProperty("DataAngajare")]
         public DateTime DataAngajare { get; set; }
@@ -20,7 +20,7 @@ namespace ManagementAngajati.Models
         public DateTime? DataReziliere { get; set; }
 
 
-        public IstoricAngajat(long id, long angajat, long post, DateTime dataAngajare, int salariu, DateTime? dataReziliere)
+        public IstoricAngajat(long id, Angajat angajat, Post post, DateTime dataAngajare, int salariu, DateTime? dataReziliere)
         {
             ID = id;
             IdAngajat = angajat;

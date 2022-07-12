@@ -46,7 +46,16 @@ namespace ManagementAngajati.Persistence.Repository
                 _context.IstoricuriAngajati.Remove(deSters);
                 _context.SaveChanges();
 
-                return new IstoricAngajat(deSters.ID, deSters.Angajat.ID, deSters.Post.ID, deSters.DataAngajare, deSters.Salariu, deSters.DataReziliere);
+                AngajatEntity angajatE = _context.Angajati.Find(deSters.Angajat.ID);
+                Angajat angajat = new Angajat(angajatE.ID, angajatE.Nume, angajatE.Prenume, angajatE.Username, angajatE.Password, angajatE.DataNasterii, angajatE.Sex, angajatE.Experienta, new List<Post>());
+                angajat.ID = deSters.ID;
+                PostEntity postE = _context.Posturi.Find(deSters.Post.ID);
+                Post post = new Post(postE.ID, postE.Functie, postE.DetaliuFunctie, postE.Departament, new List<Angajat>());
+                IstoricAngajat istoric = new IstoricAngajat(deSters.ID, angajat, post, deSters.DataAngajare, deSters.Salariu, deSters.DataReziliere);
+                return istoric;
+
+
+                // return new IstoricAngajat(deSters.ID, deSters.Angajat.ID, deSters.Post.ID, deSters.DataAngajare, deSters.Salariu, deSters.DataReziliere);
             }
             return null; 
         }
@@ -57,11 +66,20 @@ namespace ManagementAngajati.Persistence.Repository
             List<IstoricAngajat> res = new List<IstoricAngajat>();
             for(int i=0; i<dbIstoricuri.Count; i++)
             {
-                var dbIstoricAngajat = _context.IstoricuriAngajati.Where(a => a.ID == dbIstoricuri[i].ID).Select(c => c.Angajat);
-                var dbIstoricPost = _context.IstoricuriAngajati.Where(a => a.ID == dbIstoricuri[i].ID).Select(c => c.Post);
-                dbIstoricuri[i].Angajat = dbIstoricAngajat.SingleOrDefault();
-                dbIstoricuri[i].Post = dbIstoricPost.SingleOrDefault();
-                res.Add(new IstoricAngajat(dbIstoricuri[i].ID, dbIstoricuri[i].Angajat.ID, dbIstoricuri[i].Post.ID, dbIstoricuri[i].DataAngajare, dbIstoricuri[i].Salariu, dbIstoricuri[i].DataReziliere));
+                var dbIstoricAngajat = _context.IstoricuriAngajati.Where(a => a.ID == dbIstoricuri[i].ID).Select(c => c.Angajat).SingleOrDefault();
+                var dbIstoricPost = _context.IstoricuriAngajati.Where(a => a.ID == dbIstoricuri[i].ID).Select(c => c.Post).SingleOrDefault();
+                dbIstoricuri[i].Angajat = dbIstoricAngajat;
+                dbIstoricuri[i].Post = dbIstoricPost;
+
+                List<Post> posts = new List<Post>();
+                foreach (PostEntity pE in dbIstoricAngajat.IdPosturi)
+                    posts.Add(new Post(pE.ID, pE.Functie, pE.DetaliuFunctie, pE.Departament, new List<Angajat>()));
+                Angajat a = new Angajat(dbIstoricuri[i].Angajat.ID, dbIstoricAngajat.Nume, dbIstoricAngajat.Prenume, dbIstoricAngajat.Username, dbIstoricAngajat.Password, dbIstoricAngajat.DataNasterii, dbIstoricAngajat.Sex, dbIstoricAngajat.Experienta, posts);
+                a.ID = dbIstoricuri[i].Angajat.ID;
+               Post p = new Post(dbIstoricPost.ID, dbIstoricPost.Functie, dbIstoricPost.DetaliuFunctie, dbIstoricPost.Departament,new List<Angajat>()); 
+
+
+                res.Add(new IstoricAngajat(dbIstoricuri[i].ID,a , p, dbIstoricuri[i].DataAngajare, dbIstoricuri[i].Salariu, dbIstoricuri[i].DataReziliere));
 
 
             }
@@ -80,16 +98,32 @@ namespace ManagementAngajati.Persistence.Repository
                 var dbPost = _context.IstoricuriAngajati.Where(c => c.ID == id).Select(c => c.Post).SingleOrDefault();
                 dbIstoric.Angajat = dbAngajat;
                 dbIstoric.Post = dbPost;
+
+
+
+                AngajatEntity angajatE = _context.Angajati.Find(dbIstoric.Angajat.ID);
+                Angajat angajat = new Angajat(angajatE.ID, angajatE.Nume, angajatE.Prenume, angajatE.Username, angajatE.Password, angajatE.DataNasterii, angajatE.Sex, angajatE.Experienta, new List<Post>());
+                angajat.ID = dbAngajat.ID;
+                PostEntity postE = _context.Posturi.Find(dbIstoric.Post.ID);
+                Post post = new Post(postE.ID, postE.Functie, postE.DetaliuFunctie, postE.Departament, new List<Angajat>());
+                IstoricAngajat istoric = new IstoricAngajat(dbIstoric.ID, angajat, post, dbIstoric.DataAngajare, dbIstoric.Salariu, dbIstoric.DataReziliere);
+                return istoric;
+
             }
-            return new IstoricAngajat(dbIstoric.ID, dbIstoric.Angajat.ID, dbIstoric.Post.ID, dbIstoric.DataAngajare, dbIstoric.Salariu, dbIstoric.DataReziliere);
+            return null;
+         //   return new IstoricAngajat(dbIstoric.ID, dbIstoric.Angajat.ID, dbIstoric.Post.ID, dbIstoric.DataAngajare, dbIstoric.Salariu, dbIstoric.DataReziliere);
 
         }
 
         public async Task<IstoricAngajat> Update(IstoricAngajat entity, long id)
         {
             IstoricAngajatEntity dbIstoric = _context.IstoricuriAngajati.Find(id);
-            IstoricAngajat oldIstoric =  new IstoricAngajat(dbIstoric.ID, dbIstoric.Angajat.ID, dbIstoric.Post.ID, dbIstoric.DataAngajare, dbIstoric.Salariu, dbIstoric.DataReziliere);
-
+            AngajatEntity angajatE = _context.Angajati.Find(entity.IdAngajat.ID);
+            Angajat angajat = new Angajat(angajatE.ID, angajatE.Nume, angajatE.Prenume, angajatE.Username, angajatE.Password, angajatE.DataNasterii, angajatE.Sex, angajatE.Experienta, new List<Post>());
+            angajat.ID = dbIstoric.Angajat.ID;
+            PostEntity postE = _context.Posturi.Find(entity.IdPost.ID);
+            Post post = new Post(postE.ID, postE.Functie, postE.DetaliuFunctie, postE.Departament, new List<Angajat>()); 
+            IstoricAngajat oldIstoric =  new IstoricAngajat(dbIstoric.ID, angajat, post, dbIstoric.DataAngajare, dbIstoric.Salariu, dbIstoric.DataReziliere);
 
             if(oldIstoric != null)
             {
@@ -116,7 +150,16 @@ namespace ManagementAngajati.Persistence.Repository
                 var dbPost = _context.IstoricuriAngajati.Where(i => i.Angajat.ID == id).Select(c => c.Post).SingleOrDefault();
                 dbIstoric.Angajat = dbAngajat;
                 dbIstoric.Post = dbPost;
-                return new IstoricAngajat(dbIstoric.ID, dbIstoric.Angajat.ID, dbIstoric.Post.ID, dbIstoric.DataAngajare, dbIstoric.Salariu, dbIstoric.DataReziliere);
+
+                AngajatEntity angajatE = _context.Angajati.Find(dbIstoric.Angajat.ID);
+                Angajat angajat = new Angajat(angajatE.ID, angajatE.Nume, angajatE.Prenume, angajatE.Username, angajatE.Password, angajatE.DataNasterii, angajatE.Sex, angajatE.Experienta, new List<Post>());
+                angajat.ID = dbAngajat.ID;
+                PostEntity postE = _context.Posturi.Find(dbIstoric.Post.ID);
+                Post post = new Post(postE.ID, postE.Functie, postE.DetaliuFunctie, postE.Departament, new List<Angajat>());
+                IstoricAngajat istoric = new IstoricAngajat(dbIstoric.ID, angajat, post, dbIstoric.DataAngajare, dbIstoric.Salariu, dbIstoric.DataReziliere);
+                return istoric;
+
+               //  return new IstoricAngajat(dbIstoric.ID, dbIstoric.Angajat.ID, dbIstoric.Post.ID, dbIstoric.DataAngajare, dbIstoric.Salariu, dbIstoric.DataReziliere);
 
             }
             return null;

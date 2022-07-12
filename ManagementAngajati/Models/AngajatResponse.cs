@@ -27,10 +27,10 @@ namespace ManagementAngajati.Models
         public int Experienta { get; set; }
 
         [JsonProperty("IdPosturi")]
-        public List<long> Posturi { get; set; } = new List<long>();
+        public List<PostResponse> Posturi { get; set; } = new List<PostResponse>();
 
 
-        public AngajatResponse(long id, string nume, string prenume, string username, string password, DateTime dataNasterii, string sex, int experienta, List<long> posturi)
+        public AngajatResponse(long id, string nume, string prenume, string username, string password, DateTime dataNasterii, string sex, int experienta, List<PostResponse> posturi)
         {
             ID = id;
             Nume = nume;

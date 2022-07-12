@@ -23,18 +23,20 @@ namespace ManagementAngajati.Persistence.Repository
 
             var config = new MapperConfiguration(cfg => cfg.CreateMap<PostEntity, Post>().ForMember(destination => destination.IdAngajati, options =>
             {
-                options.MapFrom(source => source.Angajati.Select(a => a.ID).ToList());
+                options.MapFrom(source => source.Angajati.Select(id => new Angajat { ID = id.ID }).ToList());
             }));
 
             _mapper = new Mapper(config);
 
 
 
+
             var config2 = new MapperConfiguration(cfg => cfg.CreateMap<Post, PostEntity>().ForMember(destination => destination.Angajati, options =>
             {
-                options.MapFrom(source => source.IdAngajati.Select(a => a.ID).ToList());
+                options.MapFrom(source => source.IdAngajati.Select(id => _context.Angajati.Find(id.ID)).ToList());
             }));
 
+          
             _mapper2 = new Mapper(config2);
 
         }
@@ -84,10 +86,13 @@ namespace ManagementAngajati.Persistence.Repository
             {
                 var dbAngajatiPost = _context.Posturi.Where(p => p.ID == dbPosturi[i].ID).SelectMany(c => c.Angajati).ToList();
                 dbPosturi[i].Angajati = dbAngajatiPost;
-                posts.Add(_mapper.Map<Post>(dbPosturi[i])); 
+                posts.Add(new Post(dbPosturi[i].ID, dbPosturi[i].Functie, dbPosturi[i].DetaliuFunctie, dbPosturi[i].Departament, new List<Angajat>())); 
                 
             }
             return posts; 
+
+
+
             
         }
 

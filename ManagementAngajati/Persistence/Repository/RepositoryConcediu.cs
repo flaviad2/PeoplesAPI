@@ -23,40 +23,37 @@ namespace ManagementAngajati.Persistence.Repository
             _context = context;
 
             //din ConcediuEntity in Concediu
-            var config = new MapperConfiguration(cfg => cfg.CreateMap<ConcediuEntity, Concediu>().ForMember(destination => destination.IdAngajat, options =>
-            {
-                options.MapFrom(source => source.IdAngajat.ID);
-              
-            }));
-            _mapper = new Mapper(config);
+          
+
+            //                options.MapFrom(source => source.IdPosturi.Select(id => new Post { ID=id.ID, Departament=id.Departament, DetaliuFunctie=id.DetaliuFunctie, Functie=id.Functie}).ToList());
 
 
 
-       
-
-       /* var config2 = new MapperConfiguration(cfg => cfg.CreateMap<Concediu, ConcediuEntity>().ForMember(destination => destination.IdAngajat.ID, options =>
-             {
-                 options.MapFrom(source => source.IdAngajat);
-             }));
 
 
-            CreateMap<Owner, Car>().ForMember(dest => dest.OwnerData,
-         input => input.MapFrom(i => new Owner { Name = i.Name }));
+            /* var config2 = new MapperConfiguration(cfg => cfg.CreateMap<Concediu, ConcediuEntity>().ForMember(destination => destination.IdAngajat.ID, options =>
+                  {
+                      options.MapFrom(source => source.IdAngajat);
+                  }));
 
+
+                 CreateMap<Owner, Car>().ForMember(dest => dest.OwnerData,
+              input => input.MapFrom(i => new Owner { Name = i.Name }));
+
+                 */
+
+            /*  var config3 = new MapperConfiguration(cfg => cfg.CreateMap<Concediu, ConcediuEntity>().ForMember(destination => destination.IdAngajat, options =>
+              {
+                  options.MapFrom(i => i.IdAngajat);
+              }));
+
+              var config2 = new MapperConfiguration(cfg => cfg.CreateMap<Concediu, ConcediuEntity>().ForPath(a => a.IdAngajat, o => o.MapFrom(p => p.IdAngajat)));
             */
-
-          /*  var config3 = new MapperConfiguration(cfg => cfg.CreateMap<Concediu, ConcediuEntity>().ForMember(destination => destination.IdAngajat, options =>
-            {
-                options.MapFrom(i => i.IdAngajat);
-            }));
-
-            var config2 = new MapperConfiguration(cfg => cfg.CreateMap<Concediu, ConcediuEntity>().ForPath(a => a.IdAngajat, o => o.MapFrom(p => p.IdAngajat)));
-          */
 
 
             var config2 = new MapperConfiguration(cfg => cfg.CreateMap<Concediu, ConcediuEntity>().ForMember(destination => destination.IdAngajat, options =>
             {
-                options.MapFrom(i => new AngajatEntity { ID = i.IdAngajat});
+                options.MapFrom(i => new AngajatEntity { ID = i.IdAngajat.ID});
             }));
 
             _mapper2 = new Mapper(config2);
@@ -116,8 +113,12 @@ namespace ManagementAngajati.Persistence.Repository
             List<Concediu> listRes = new List<Concediu>();
             foreach (ConcediuEntity aE in dbConcedii)
             {
-                var x = aE;
-                listRes.Add(new Concediu(aE.ID, aE.IdAngajat.ID, aE.DataIncepere, aE.DataTerminare));
+             
+
+                AngajatEntity angajatEntity = aE.IdAngajat;
+                Angajat angajat = new Angajat(angajatEntity.ID, angajatEntity.Nume, angajatEntity.Prenume, angajatEntity.Username, angajatEntity.Password, angajatEntity.DataNasterii, angajatEntity.Sex, angajatEntity.Experienta, new List<Post>());
+                listRes.Add(new Concediu(aE.ID, angajat,aE.DataIncepere, aE.DataTerminare));
+
             }
             return listRes;
 
@@ -132,8 +133,11 @@ namespace ManagementAngajati.Persistence.Repository
             {
                 var dbAngajat = _context.Concedii.Where(c => c.ID == id).Select(c => c.IdAngajat).SingleOrDefault();
                 dbConcediu.IdAngajat = dbAngajat;
-                return new Concediu(dbConcediu.ID, dbConcediu.IdAngajat.ID, dbConcediu.DataIncepere, dbConcediu.DataTerminare); 
+                AngajatEntity angajatEntity = dbConcediu.IdAngajat;
+                Angajat angajat = new Angajat(angajatEntity.ID, angajatEntity.Nume, angajatEntity.Prenume, angajatEntity.Username, angajatEntity.Password, angajatEntity.DataNasterii, angajatEntity.Sex, angajatEntity.Experienta, new List<Post>());
+                return new Concediu(dbConcediu.ID, angajat, dbConcediu.DataIncepere, dbConcediu.DataTerminare);
 
+               // return _mapper.Map<Concediu>(dbConcediu); 
             }
             return null;
 
@@ -152,12 +156,14 @@ namespace ManagementAngajati.Persistence.Repository
                 oldConcediu.ID = id;
                 oldConcediu.DataIncepere = entity.DataIncepere;
                 oldConcediu.DataTerminare = entity.DataTerminare;
-
+                //iau angajatul pt acest concediu 
+                AngajatEntity angajatEntity = oldConcediu.IdAngajat;
+                Angajat angajat = new Angajat(angajatEntity.ID, angajatEntity.Nume, angajatEntity.Prenume, angajatEntity.Username, angajatEntity.Password, angajatEntity.DataNasterii, angajatEntity.Sex, angajatEntity.Experienta, new List<Post>());
                 _context.Concedii.Update(oldConcediu);
                 _context.SaveChanges();
 
 
-                return new Concediu(oldConcediu.ID, oldConcediu.IdAngajat.ID, oldConcediu.DataIncepere, oldConcediu.DataTerminare); 
+                return new Concediu(oldConcediu.ID,angajat, oldConcediu.DataIncepere, oldConcediu.DataTerminare); 
 
             }
 

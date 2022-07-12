@@ -19,7 +19,7 @@ namespace ManagementAngajati.Models
         public String Departament { get; set; }
 
         [JsonProperty("IdAngajati")]
-        public List<long> Angajati { get; set; } = new List<long>();
+        private List<long> Angajati { get; set; } = new List<long>();
 
         
         public PostResponse()
@@ -27,13 +27,11 @@ namespace ManagementAngajati.Models
 
         }
 
-        public PostResponse(long id, string functie, string detaliuFunctie, string departament, List<long> angajati)
-        {
+        public PostResponse(long id, string functie, string detaliuFunctie, string departament) { 
             ID = id;
             Functie = functie;
             DetaliuFunctie = detaliuFunctie;
             Departament = departament;
-            Angajati = angajati;
         }
 
 

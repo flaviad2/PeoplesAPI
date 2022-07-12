@@ -3,10 +3,10 @@ using Newtonsoft.Json;
 
 namespace ManagementAngajati.Models
 {
-    public class IstoricAngajatResponse : Entity<long>
+    public class IstoricAngajatPostResponse : Entity<long>
     {
         [JsonProperty("IdAngajat")]
-        public AngajatNoPostsResponse Angajat { get; set; }
+        public Angajat Angajat { get; set; }
 
         [JsonProperty("IdPost")]
         public PostResponse Post { get; set; }
@@ -20,7 +20,7 @@ namespace ManagementAngajati.Models
         public DateTime? DataReziliere { get; set; }
 
 
-        public IstoricAngajatResponse(long id, AngajatNoPostsResponse angajat, PostResponse post, DateTime dataAngajare, int salariu, DateTime? dataReziliere)
+        public IstoricAngajatPostResponse(long id, Angajat angajat, PostResponse post, DateTime dataAngajare, int salariu, DateTime? dataReziliere)
         {
             ID = id;
             Angajat = angajat;
@@ -29,7 +29,7 @@ namespace ManagementAngajati.Models
             Salariu = salariu;
             DataReziliere = dataReziliere;
         }
-        public IstoricAngajatResponse()
+        public IstoricAngajatPostResponse()
         {
 
         }

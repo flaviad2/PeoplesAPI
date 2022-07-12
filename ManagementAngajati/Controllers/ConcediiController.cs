@@ -124,7 +124,7 @@ namespace ManagementAngajati.Controllers
         private Concediu ConcediuPostRequestToConcediu  (ConcediuPOSTRequest concediuRequest)
         {
             Angajat aID = _angajatData.FindOne(concediuRequest.IdAngajat).Result;
-            return new Concediu(concediuRequest.ID, aID.ID, concediuRequest.DataIncepere, concediuRequest.DataTerminare); 
+            return new Concediu(concediuRequest.ID, aID, concediuRequest.DataIncepere, concediuRequest.DataTerminare); 
 
         }
     }
