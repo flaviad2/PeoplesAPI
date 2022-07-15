@@ -32,7 +32,6 @@ namespace ManagementAngajati.Persistence.Repository
 
             IstoricAngajatEntity istoric = new IstoricAngajatEntity(entity.ID, _context.Angajati.Find(entity.IdAngajat.ID), _context.Posturi.Find(entity.IdPost.ID), entity.DataAngajare, entity.Salariu, entity.DataReziliere);
             var added = _context.IstoricuriAngajati.Add(istoric).Entity;
-            
             _context.SaveChanges();
             entity.ID = added.ID;
             return entity;
@@ -59,7 +58,6 @@ namespace ManagementAngajati.Persistence.Repository
                 return istoric;
 
 
-                // return new IstoricAngajat(deSters.ID, deSters.Angajat.ID, deSters.Post.ID, deSters.DataAngajare, deSters.Salariu, deSters.DataReziliere);
             }
             return null; 
         }
@@ -80,7 +78,7 @@ namespace ManagementAngajati.Persistence.Repository
                     posts.Add(new Post(pE.ID, pE.Functie, pE.DetaliuFunctie, pE.Departament, new List<Angajat>()));
                 Angajat a = new Angajat(dbIstoricuri[i].Angajat.ID, dbIstoricAngajat.Nume, dbIstoricAngajat.Prenume, dbIstoricAngajat.Username, dbIstoricAngajat.Password, dbIstoricAngajat.DataNasterii, dbIstoricAngajat.Sex, dbIstoricAngajat.Experienta, posts);
                 a.ID = dbIstoricuri[i].Angajat.ID;
-               Post p = new Post(dbIstoricPost.ID, dbIstoricPost.Functie, dbIstoricPost.DetaliuFunctie, dbIstoricPost.Departament,new List<Angajat>()); 
+                Post p = new Post(dbIstoricPost.ID, dbIstoricPost.Functie, dbIstoricPost.DetaliuFunctie, dbIstoricPost.Departament,new List<Angajat>()); 
 
 
                 res.Add(new IstoricAngajat(dbIstoricuri[i].ID,a , p, dbIstoricuri[i].DataAngajare, dbIstoricuri[i].Salariu, dbIstoricuri[i].DataReziliere));
@@ -103,8 +101,6 @@ namespace ManagementAngajati.Persistence.Repository
                 dbIstoric.Angajat = dbAngajat;
                 dbIstoric.Post = dbPost;
 
-
-
                 AngajatEntity angajatE = _context.Angajati.Find(dbIstoric.Angajat.ID);
                 Angajat angajat = new Angajat(angajatE.ID, angajatE.Nume, angajatE.Prenume, angajatE.Username, angajatE.Password, angajatE.DataNasterii, angajatE.Sex, angajatE.Experienta, new List<Post>());
                 angajat.ID = dbAngajat.ID;
@@ -115,7 +111,6 @@ namespace ManagementAngajati.Persistence.Repository
 
             }
             return null;
-         //   return new IstoricAngajat(dbIstoric.ID, dbIstoric.Angajat.ID, dbIstoric.Post.ID, dbIstoric.DataAngajare, dbIstoric.Salariu, dbIstoric.DataReziliere);
 
         }
 
@@ -165,7 +160,6 @@ namespace ManagementAngajati.Persistence.Repository
                 IstoricAngajat istoric = new IstoricAngajat(dbIstoric.ID, angajat, post, dbIstoric.DataAngajare, dbIstoric.Salariu, dbIstoric.DataReziliere);
                 return istoric;
 
-               //  return new IstoricAngajat(dbIstoric.ID, dbIstoric.Angajat.ID, dbIstoric.Post.ID, dbIstoric.DataAngajare, dbIstoric.Salariu, dbIstoric.DataReziliere);
 
             }
             return null;

@@ -15,7 +15,6 @@ namespace ManagementAngajati.Persistence.Repository
         private readonly ManagementAngajatiContext _context;
 
         private IMapper _mapper;
-
         private IMapper _mapper2;
 
         public RepositoryConcediu(ManagementAngajatiContext context)
@@ -48,9 +47,7 @@ namespace ManagementAngajati.Persistence.Repository
             var added = _context.Concedii.Add(concediu).Entity;
             _context.SaveChanges();
             entity.ID = added.ID; 
-          
             return entity;
-
 
         }
 
@@ -58,7 +55,7 @@ namespace ManagementAngajati.Persistence.Repository
 
         public async Task<Concediu> Delete(long id)
         {
-            ConcediuEntity? deSters = _context.Concedii?.Find(id);
+            ConcediuEntity deSters = _context.Concedii.Find(id);
             if (deSters != null)
             {
                 _context.Concedii.Remove(deSters);
@@ -127,7 +124,6 @@ namespace ManagementAngajati.Persistence.Repository
                 
                 return new Concediu(dbConcediu.ID, angajat, dbConcediu.DataIncepere, dbConcediu.DataTerminare);
 
-               // return _mapper.Map<Concediu>(dbConcediu); 
             }
             return null;
 

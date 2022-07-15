@@ -20,8 +20,11 @@ namespace ManagementAngajati.Controllers
             _postData = repositoryPost;
         }
 
+        
+     
         [HttpGet]
         [Route("api/Employees")]
+        
         public IActionResult GetAll()
         {
             var angajati = _angajatData.FindAll().Result;

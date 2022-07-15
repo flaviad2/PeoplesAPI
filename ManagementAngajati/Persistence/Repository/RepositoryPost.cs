@@ -136,9 +136,7 @@ namespace ManagementAngajati.Persistence.Repository
             if (oldPostEntity != null)
             {
                 oldPostEntity.DetaliuFunctie = entity.DetaliuFunctie;
-                oldPostEntity.Angajati.Clear();
-                // foreach (AngajatEntity angajat in entity.Angajati)
-                //     oldPostEntity.Angajati.Add(angajat);
+   
                 oldPostEntity.Functie = entity.Functie;
                 oldPostEntity.Departament = entity.Departament;
                 _context.Posturi.Update(oldPostEntity);
